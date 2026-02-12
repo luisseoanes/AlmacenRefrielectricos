@@ -1,0 +1,1308 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Almacén Refrielectrico - Valledupar | +30 Años de Experiencia</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --navy: #1a2947;
+            --ice-blue: #e8f4f8;
+            --bright-blue: #0088cc;
+            --white: #ffffff;
+            --light-gray: #f5f7fa;
+            --text-dark: #2c3e50;
+            --accent-orange: #ff6b35;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: var(--text-dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Header & Navigation */
+        header {
+            background: linear-gradient(135deg, var(--navy) 0%, #2c4a6e 100%);
+            color: white;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .top-bar {
+            background: rgba(0,0,0,0.2);
+            padding: 8px 0;
+            font-size: 0.85rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .top-bar .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .contact-info {
+            display: flex;
+            gap: 25px;
+        }
+
+        .contact-info span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-img {
+            width: 60px;
+            height: 60px;
+            background: white;
+            border-radius: 50%;
+            padding: 8px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .logo-text h1 {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 1.8rem;
+            letter-spacing: 2px;
+            margin-bottom: -5px;
+        }
+
+        .logo-text p {
+            font-size: 0.75rem;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 35px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent-orange);
+            transition: width 0.3s;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--ice-blue) 0%, #d4e9f0 100%);
+            padding: 180px 20px 100px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 50%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><defs><pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(26,41,71,0.05)" stroke-width="1"/></pattern></defs><rect width="1200" height="800" fill="url(%23grid)"/></svg>');
+            opacity: 0.5;
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-text h2 {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 4rem;
+            color: var(--navy);
+            line-height: 1.1;
+            margin-bottom: 20px;
+            animation: slideInLeft 0.8s ease-out;
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .hero-text .highlight {
+            color: var(--bright-blue);
+            display: block;
+        }
+
+        .hero-text p {
+            font-size: 1.2rem;
+            color: var(--text-dark);
+            margin-bottom: 30px;
+            font-weight: 300;
+            animation: slideInLeft 0.8s ease-out 0.2s backwards;
+        }
+
+        .badge {
+            display: inline-block;
+            background: var(--accent-orange);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 25px;
+            animation: slideInLeft 0.8s ease-out 0.1s backwards;
+        }
+
+        .badge i {
+            margin-right: 8px;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            animation: slideInLeft 0.8s ease-out 0.3s backwards;
+        }
+
+        .btn {
+            padding: 15px 35px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: var(--bright-blue);
+            color: white;
+            box-shadow: 0 8px 20px rgba(0,136,204,0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 28px rgba(0,136,204,0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--navy);
+            border: 2px solid var(--navy);
+        }
+
+        .btn-secondary:hover {
+            background: var(--navy);
+            color: white;
+        }
+
+        .hero-image {
+            position: relative;
+            animation: slideInRight 0.8s ease-out;
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .hero-visual {
+            background: white;
+            border-radius: 30px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .hero-visual::before {
+            content: none;
+        }
+
+        .hero-icon {
+            font-size: 6rem;
+            color: var(--bright-blue);
+            margin-bottom: 20px;
+        }
+
+        /* Services Section */
+        .services {
+            padding: 100px 20px;
+            background: var(--white);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-title {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 3rem;
+            color: var(--navy);
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+        }
+
+        .section-subtitle {
+            font-size: 1.1rem;
+            color: #666;
+            font-weight: 300;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .service-card {
+            background: white;
+            padding: 40px 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            transition: all 0.3s;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--bright-blue), var(--accent-orange));
+            transform: scaleX(0);
+            transition: transform 0.3s;
+        }
+
+        .service-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+        }
+
+        .service-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            display: block;
+            color: var(--bright-blue);
+        }
+
+        .service-card h3 {
+            font-size: 1.4rem;
+            color: var(--navy);
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .service-card p {
+            color: #666;
+            line-height: 1.7;
+        }
+
+        /* About Section */
+        .about {
+            padding: 100px 20px;
+            background: linear-gradient(135deg, var(--navy) 0%, #2c4a6e 100%);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .about::before {
+            content: '';
+            position: absolute;
+            width: 360px;
+            height: 360px;
+            border-radius: 50%;
+            opacity: 0.08;
+            right: -120px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: radial-gradient(circle, var(--accent-orange) 0%, transparent 70%);
+        }
+
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .about-text h2 {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 3rem;
+            margin-bottom: 25px;
+            letter-spacing: 1px;
+        }
+
+        .about-text p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 20px;
+            opacity: 0.95;
+            font-weight: 300;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 25px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        .stat-number {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 3rem;
+            color: var(--accent-orange);
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .about-features {
+            display: grid;
+            gap: 20px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 20px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s;
+        }
+
+        .feature-item:hover {
+            background: rgba(255,255,255,0.15);
+            transform: translateX(10px);
+        }
+
+        .feature-icon {
+            font-size: 2rem;
+            min-width: 50px;
+            color: var(--accent-orange);
+        }
+
+        .feature-text h4 {
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        .feature-text p {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin: 0;
+        }
+
+        /* Products Section */
+        .products {
+            padding: 100px 20px;
+            background: var(--light-gray);
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            transition: all 0.3s;
+        }
+
+        .product-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, var(--ice-blue), #d4e9f0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+        }
+
+        .product-image i {
+            font-size: 3.5rem;
+            color: var(--bright-blue);
+        }
+
+        .product-info {
+            padding: 25px;
+        }
+
+        .product-info h3 {
+            font-size: 1.3rem;
+            color: var(--navy);
+            margin-bottom: 10px;
+        }
+
+        .product-info p {
+            color: #666;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        /* Testimonials Section */
+        .testimonials {
+            padding: 100px 20px;
+            background: white;
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .testimonial-card {
+            background: var(--light-gray);
+            padding: 35px;
+            border-radius: 20px;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .testimonial-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+        }
+
+        .quote-icon {
+            font-size: 3rem;
+            color: var(--bright-blue);
+            opacity: 0.3;
+            position: absolute;
+            top: 15px;
+            right: 25px;
+        }
+
+        .testimonial-text {
+            font-style: italic;
+            color: var(--text-dark);
+            margin-bottom: 20px;
+            line-height: 1.7;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .author-avatar {
+            width: 50px;
+            height: 50px;
+            background: var(--bright-blue);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+
+        .author-info h4 {
+            font-size: 1rem;
+            color: var(--navy);
+            margin-bottom: 2px;
+        }
+
+        .author-info p {
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        .stars {
+            color: #ffa500;
+            margin-bottom: 15px;
+        }
+
+        /* Contact Section */
+        .contact {
+            padding: 100px 20px;
+            background: linear-gradient(135deg, var(--ice-blue) 0%, #d4e9f0 100%);
+        }
+
+        .contact-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .contact-info-section h2 {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 3rem;
+            color: var(--navy);
+            margin-bottom: 25px;
+        }
+
+        .contact-info-section p {
+            font-size: 1.1rem;
+            color: var(--text-dark);
+            margin-bottom: 30px;
+            line-height: 1.8;
+        }
+
+        .contact-details {
+            display: grid;
+            gap: 20px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+
+        .contact-item-icon {
+            font-size: 2rem;
+            min-width: 50px;
+            color: var(--bright-blue);
+        }
+
+        .social-links i {
+            font-size: 1.2rem;
+        }
+
+        .contact-item-text h4 {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .contact-item-text p {
+            font-size: 1.1rem;
+            color: var(--navy);
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .contact-form {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--navy);
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--bright-blue);
+            box-shadow: 0 0 0 3px rgba(0,136,204,0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: var(--bright-blue);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .submit-btn:hover {
+            background: #006fa3;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,136,204,0.3);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--navy);
+            color: white;
+            padding: 50px 20px 20px;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 30px;
+        }
+
+        .footer-section h3 {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+        }
+
+        .footer-section p {
+            opacity: 0.8;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+            opacity: 0.8;
+            transition: all 0.3s;
+        }
+
+        .footer-links a:hover {
+            opacity: 1;
+            padding-left: 5px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .social-links a:hover {
+            background: var(--bright-blue);
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            opacity: 0.7;
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            .hero-content,
+            .about-content,
+            .contact-content {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-text h2 {
+                font-size: 3rem;
+            }
+
+            nav ul {
+                display: none;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .hero-text h2 {
+                font-size: 2.5rem;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+            }
+
+            .section-title {
+                font-size: 2.5rem;
+            }
+
+            .contact-info {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+
+        /* Scroll Animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease-out;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="top-bar">
+            <div class="container">
+                <div class="contact-info">
+                    <span><i class="fas fa-location-dot"></i> Cra. 8 #19-14, Valledupar, Cesar</span>
+                    <span><i class="fas fa-clock"></i> Lun - Sáb: 8:00 AM - 6:00 PM</span>
+                </div>
+                <div class="social-info">
+                    <span><i class="fas fa-phone"></i> Llámanos ahora</span>
+                </div>
+            </div>
+        </div>
+        <nav>
+            <div class="logo-section">
+                <div class="logo-img">
+                    <img src="images/Logo.jpeg" alt="Logo Refrielectrico" style="width: 100%; height: 100%; object-fit: contain;">
+                </div>
+                <div class="logo-text">
+                    <h1>REFRIELECTRICO</h1>
+                    <p>+30 Años de Confianza</p>
+                </div>
+            </div>
+            <ul>
+                <li><a href="#inicio">Inicio</a></li>
+                <li><a href="#servicios">Servicios</a></li>
+                <li><a href="#nosotros">Nosotros</a></li>
+                <li><a href="#productos">Productos</a></li>
+                <li><a href="#contacto">Contacto</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="inicio">
+        <div class="hero-content">
+            <div class="hero-text">
+                <div class="badge"><i class="fas fa-star"></i> Más de 30 Años de Experiencia</div>
+                <h2>
+                    Expertos en 
+                    <span class="highlight">Refrigeración</span>
+                    y Electrodomésticos
+                </h2>
+                <p>Soluciones completas en refrigeración, aires acondicionados y electrodomésticos para tu hogar o negocio en Valledupar.</p>
+                <div class="cta-buttons">
+                    <a href="#contacto" class="btn btn-primary">Solicitar Servicio</a>
+                    <a href="#servicios" class="btn btn-secondary">Ver Servicios</a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <div class="hero-visual">
+                    <div style="text-align: center;">
+                        <div class="hero-icon"><i class="fas fa-snowflake"></i></div>
+                        <h3 style="font-family: 'Bebas Neue'; font-size: 2rem; color: var(--navy); margin-bottom: 10px;">Frío Perfecto</h3>
+                        <p style="color: #666;">Instalación, mantenimiento y reparación profesional</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="services" id="servicios">
+        <div class="container">
+            <div class="section-header fade-in">
+                <h2 class="section-title">Nuestros Servicios</h2>
+                <p class="section-subtitle">Soluciones integrales para todas tus necesidades</p>
+            </div>
+            <div class="services-grid">
+                <div class="service-card fade-in">
+                    <span class="service-icon"><i class="fas fa-snowflake"></i></span>
+                    <h3>Refrigeración</h3>
+                    <p>Instalación, mantenimiento y reparación de neveras, congeladores y sistemas de refrigeración comercial.</p>
+                </div>
+                <div class="service-card fade-in">
+                    <span class="service-icon"><i class="fas fa-fan"></i></span>
+                    <h3>Aires Acondicionados</h3>
+                    <p>Servicio completo de aires acondicionados: instalación, limpieza, recarga de gas y reparación.</p>
+                </div>
+                <div class="service-card fade-in">
+                    <span class="service-icon"><i class="fas fa-screwdriver-wrench"></i></span>
+                    <h3>Electrodomésticos</h3>
+                    <p>Reparación y mantenimiento de lavadoras, secadoras, estufas y todo tipo de electrodomésticos.</p>
+                </div>
+                <div class="service-card fade-in">
+                    <span class="service-icon"><i class="fas fa-bolt"></i></span>
+                    <h3>Instalaciones Eléctricas</h3>
+                    <p>Instalaciones eléctricas seguras y certificadas para tu hogar o negocio.</p>
+                </div>
+                <div class="service-card fade-in">
+                    <span class="service-icon"><i class="fas fa-toolbox"></i></span>
+                    <h3>Mantenimiento Preventivo</h3>
+                    <p>Programas de mantenimiento para extender la vida útil de tus equipos.</p>
+                </div>
+                <div class="service-card fade-in">
+                    <span class="service-icon"><i class="fas fa-truck-fast"></i></span>
+                    <h3>Servicio a Domicilio</h3>
+                    <p>Atención rápida y eficiente en la comodidad de tu hogar o empresa.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about" id="nosotros">
+        <div class="container">
+            <div class="about-content">
+                <div class="about-text">
+                    <h2>Quiénes Somos</h2>
+                    <p>Almacén Refrielectrico es una empresa familiar con más de 30 años de trayectoria en Valledupar, Cesar. Nos especializamos en brindar soluciones integrales en refrigeración, aires acondicionados y electrodomésticos.</p>
+                    <p>Nuestra experiencia y compromiso con la excelencia nos han convertido en la opción preferida de familias y empresas en toda la región.</p>
+                    <div class="stats">
+                        <div class="stat-card">
+                            <span class="stat-number">30+</span>
+                            <span class="stat-label">Años de Experiencia</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">5000+</span>
+                            <span class="stat-label">Clientes Satisfechos</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">24/7</span>
+                            <span class="stat-label">Atención al Cliente</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-features">
+                    <div class="feature-item">
+                        <div class="feature-icon"><i class="fas fa-circle-check"></i></div>
+                        <div class="feature-text">
+                            <h4>Técnicos Certificados</h4>
+                            <p>Personal altamente capacitado y certificado</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon"><i class="fas fa-award"></i></div>
+                        <div class="feature-text">
+                            <h4>Garantía de Servicio</h4>
+                            <p>Todos nuestros trabajos cuentan con garantía</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon"><i class="fas fa-stopwatch"></i></div>
+                        <div class="feature-text">
+                            <h4>Respuesta Rápida</h4>
+                            <p>Atención inmediata a tus requerimientos</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon"><i class="fas fa-tags"></i></div>
+                        <div class="feature-text">
+                            <h4>Precios Justos</h4>
+                            <p>Tarifas competitivas y transparentes</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon"><i class="fas fa-gears"></i></div>
+                        <div class="feature-text">
+                            <h4>Repuestos Originales</h4>
+                            <p>Utilizamos solo piezas de alta calidad</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products Section -->
+    <section class="products" id="productos">
+        <div class="container">
+            <div class="section-header fade-in">
+                <h2 class="section-title">Productos y Marcas</h2>
+                <p class="section-subtitle">Trabajamos con las mejores marcas del mercado</p>
+            </div>
+            <div class="products-grid">
+                <div class="product-card fade-in">
+                    <div class="product-image"><i class="fas fa-snowflake"></i></div>
+                    <div class="product-info">
+                        <h3>Neveras</h3>
+                        <p>Neveras de todas las capacidades y marcas reconocidas</p>
+                    </div>
+                </div>
+                <div class="product-card fade-in">
+                    <div class="product-image"><i class="fas fa-fan"></i></div>
+                    <div class="product-info">
+                        <h3>Aires Acondicionados</h3>
+                        <p>Split, ventana y centrales de todas las capacidades</p>
+                    </div>
+                </div>
+                <div class="product-card fade-in">
+                    <div class="product-image"><i class="fas fa-icicles"></i></div>
+                    <div class="product-info">
+                        <h3>Congeladores</h3>
+                        <p>Congeladores verticales y horizontales</p>
+                    </div>
+                </div>
+                <div class="product-card fade-in">
+                    <div class="product-image"><i class="fas fa-plug"></i></div>
+                    <div class="product-info">
+                        <h3>Electrodomésticos</h3>
+                        <p>Lavadoras, secadoras, estufas y más</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials">
+        <div class="container">
+            <div class="section-header fade-in">
+                <h2 class="section-title">Lo Que Dicen Nuestros Clientes</h2>
+                <p class="section-subtitle">La satisfacción de nuestros clientes es nuestra mejor carta de presentación</p>
+            </div>
+            <div class="testimonials-grid">
+                <div class="testimonial-card fade-in">
+                    <div class="quote-icon">"</div>
+                    <div class="stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="testimonial-text">"Excelente servicio. Repararon mi nevera el mismo día y quedó funcionando perfectamente. Muy profesionales y honestos con los precios."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">MC</div>
+                        <div class="author-info">
+                            <h4>María Contreras</h4>
+                            <p>Cliente desde 2018</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card fade-in">
+                    <div class="quote-icon">"</div>
+                    <div class="stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="testimonial-text">"Llevo más de 10 años confiando en ellos para el mantenimiento de los aires acondicionados de mi negocio. Siempre puntuales y eficientes."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">JR</div>
+                        <div class="author-info">
+                            <h4>José Ramírez</h4>
+                            <p>Empresario</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card fade-in">
+                    <div class="quote-icon">"</div>
+                    <div class="stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="testimonial-text">"La mejor atención al cliente. Me asesoraron perfectamente para elegir el aire acondicionado ideal para mi casa. 100% recomendados."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">LP</div>
+                        <div class="author-info">
+                            <h4>Laura Pérez</h4>
+                            <p>Ama de casa</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact" id="contacto">
+        <div class="contact-content">
+            <div class="contact-info-section">
+                <h2>Contáctanos</h2>
+                <p>¿Necesitas nuestros servicios? Estamos aquí para ayudarte. Contáctanos por cualquiera de estos medios y te responderemos a la brevedad.</p>
+                <div class="contact-details">
+                    <div class="contact-item">
+                        <div class="contact-item-icon"><i class="fas fa-location-dot"></i></div>
+                        <div class="contact-item-text">
+                            <h4>Dirección</h4>
+                            <p>Cra. 8 #19-14, Valledupar, Cesar</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-item-icon"><i class="fas fa-phone"></i></div>
+                        <div class="contact-item-text">
+                            <h4>Teléfono</h4>
+                            <p>Llámanos para más información</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-item-icon"><i class="fas fa-clock"></i></div>
+                        <div class="contact-item-text">
+                            <h4>Horario</h4>
+                            <p>Lun - Sáb: 8:00 AM - 6:00 PM</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-item-icon"><i class="fas fa-envelope"></i></div>
+                        <div class="contact-item-text">
+                            <h4>Email</h4>
+                            <p>info@refrielectrico.com</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="contact-form">
+                <form>
+                    <div class="form-group">
+                        <label>Nombre Completo</label>
+                        <input type="text" placeholder="Tu nombre" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Teléfono</label>
+                        <input type="tel" placeholder="Tu número de teléfono" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" placeholder="Tu correo electrónico" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Servicio</label>
+                        <input type="text" placeholder="¿Qué servicio necesitas?" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Mensaje</label>
+                        <textarea placeholder="Cuéntanos más detalles sobre tu requerimiento" required></textarea>
+                    </div>
+                    <button type="submit" class="submit-btn">Enviar Mensaje</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Refrielectrico</h3>
+                <p>Más de 30 años brindando soluciones en refrigeración y electrodomésticos en Valledupar y toda la región.</p>
+                <div class="social-links">
+                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h3>Enlaces Rápidos</h3>
+                <ul class="footer-links">
+                    <li><a href="#inicio">Inicio</a></li>
+                    <li><a href="#servicios">Servicios</a></li>
+                    <li><a href="#nosotros">Nosotros</a></li>
+                    <li><a href="#productos">Productos</a></li>
+                    <li><a href="#contacto">Contacto</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Servicios</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Refrigeración</a></li>
+                    <li><a href="#">Aires Acondicionados</a></li>
+                    <li><a href="#">Electrodomésticos</a></li>
+                    <li><a href="#">Mantenimiento</a></li>
+                    <li><a href="#">Instalaciones</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Contacto</h3>
+                <ul class="footer-links">
+                    <li><i class="fas fa-location-dot"></i> Cra. 8 #19-14</li>
+                    <li>Valledupar, Cesar</li>
+                    <li><i class="fas fa-phone"></i> Llámanos</li>
+                    <li><i class="fas fa-envelope"></i> info@refrielectrico.com</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Almacén Refrielectrico. Todos los derechos reservados. | Diseño web profesional</p>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    const headerHeight = 120;
+                    const targetPosition = target.offsetTop - headerHeight;
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Intersection Observer for fade-in animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
