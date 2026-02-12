@@ -706,8 +706,49 @@
                     <h2 class="section-title">Catálogo de Productos</h2>
                     <p class="section-subtitle">Estos productos sirven como base para el catálogo. Se ampliarán en futuras versiones.</p>
                 </div>
+                <div class="catalog-controls">
+                    <div class="control-field">
+                        <label for="buscarProducto">Buscar producto</label>
+                        <div class="control-input">
+                            <i class="fas fa-magnifying-glass"></i>
+                            <input id="buscarProducto" type="search" placeholder="Ej: manguera, R134A, LG">
+                        </div>
+                    </div>
+                    <div class="control-field">
+                        <label for="filtroCategoria">Categoría</label>
+                        <select id="filtroCategoria">
+                            <option value="all">Todas</option>
+                            <option value="aire">Aire</option>
+                            <option value="refrigeracion">Refrigeración</option>
+                            <option value="lavado">Lavado</option>
+                            <option value="electricidad">Electricidad</option>
+                            <option value="consumibles">Consumibles</option>
+                        </select>
+                    </div>
+                    <div class="control-field">
+                        <label for="filtroMarca">Marca</label>
+                        <select id="filtroMarca">
+                            <option value="all">Todas</option>
+                            <option value="donper">Donper</option>
+                            <option value="embraco">Embraco</option>
+                            <option value="tecunseh">Tecunseh</option>
+                            <option value="lg">LG</option>
+                            <option value="gmcc">GMCC</option>
+                            <option value="samsung">Samsung</option>
+                            <option value="whirlpool">Whirlpool</option>
+                            <option value="haceb">Haceb</option>
+                            <option value="mabe">Mabe</option>
+                            <option value="amazonas">Amazonas</option>
+                        </select>
+                    </div>
+                </div>
+                <p class="results-count" id="resultsCount">17 productos disponibles</p>
+                <p class="no-results" id="noResults">No encontramos productos con esos filtros.</p>
                 <div class="catalog-grid">
-                    <article class="catalog-card">
+                    <article class="catalog-card" data-category="aire" data-brands="donper embraco tecunseh lg gmcc" data-search="unidades aire donper embraco tecunseh lg gmcc compresor" data-options="Donper|Embraco|Tecunseh|LG|GMCC" data-price="Desde $320.000 COP">
+                        <div class="catalog-image">
+                            <img src="https://images.unsplash.com/photo-1724488751821-1415f5cf4960?auto=format&fit=crop&w=1200&q=60" alt="Unidad de aire acondicionado exterior">
+                        </div>
                         <div class="card-title">
                             <i class="fas fa-snowflake"></i>
                             <h3>Unidades de Aire</h3>
@@ -720,21 +761,37 @@
                             <li>LG</li>
                             <li>GMCC</li>
                         </ul>
+                        <div class="price">Desde $320.000 COP</div>
+                        <div class="card-actions">
+                            <button class="btn btn-primary btn-small js-open-modal" type="button">Elegir opción</button>
+                            <button class="btn btn-whatsapp btn-small" type="button"><i class="fab fa-whatsapp"></i> Cotizar</button>
+                        </div>
                     </article>
 
-                    <article class="catalog-card">
+                    <article class="catalog-card" data-category="refrigeracion" data-brands="rubatex" data-search="rubatex aislamiento espuma 3/8 5/16 1/4 1/2 5/8" data-options="3/8|5/16|1/4|1/2|5/8" data-price="Desde $8.500 COP / metro">
+                        <div class="catalog-image">
+                            <img src="https://images.unsplash.com/photo-1664693641366-83170c06b230?auto=format&fit=crop&w=1200&q=60" alt="Aislamiento de tubería para refrigeración">
+                        </div>
                         <div class="card-title">
                             <i class="fas fa-layer-group"></i>
                             <h3>Rubatex</h3>
                         </div>
                         <p>Medidas disponibles:</p>
                         <ul>
-                            <li>3/8, 5/16, 1/4 y más</li>
+                            <li>3/8, 5/16, 1/4, 1/2, 5/8</li>
                             <li>Ventas por metro o rollo</li>
                         </ul>
+                        <div class="price">Desde $8.500 COP / metro</div>
+                        <div class="card-actions">
+                            <button class="btn btn-primary btn-small js-open-modal" type="button">Elegir opción</button>
+                            <button class="btn btn-whatsapp btn-small" type="button"><i class="fab fa-whatsapp"></i> Cotizar</button>
+                        </div>
                     </article>
 
-                    <article class="catalog-card">
+                    <article class="catalog-card" data-category="consumibles" data-brands="vinilo" data-search="cintas vinilo cinta aislante colores" data-options="Negra|Roja|Azul|Verde|Amarilla" data-price="Desde $6.000 COP">
+                        <div class="catalog-image">
+                            <img src="https://images.unsplash.com/photo-1760377821917-722e631cd716?auto=format&fit=crop&w=1200&q=60" alt="Cinta vinilo eléctrica">
+                        </div>
                         <div class="card-title">
                             <i class="fas fa-tape"></i>
                             <h3>Cintas Vinilo</h3>
@@ -743,9 +800,17 @@
                             <li>Varios colores y anchos</li>
                             <li>Uso eléctrico y aislamiento</li>
                         </ul>
+                        <div class="price">Desde $6.000 COP</div>
+                        <div class="card-actions">
+                            <button class="btn btn-primary btn-small js-open-modal" type="button">Elegir opción</button>
+                            <button class="btn btn-whatsapp btn-small" type="button"><i class="fab fa-whatsapp"></i> Cotizar</button>
+                        </div>
                     </article>
 
-                    <article class="catalog-card">
+                    <article class="catalog-card" data-category="refrigeracion" data-brands="r134a r600 r290 r404" data-search="gases refrigerantes r134a r600 r290 r404 pipetas" data-options="R134A pequeño|R134A grande|R600 pipeta|R290 pipeta|R404 grande" data-price="Desde $22.000 COP">
+                        <div class="catalog-image">
+                            <img src="https://images.unsplash.com/photo-1760036455561-3044404472db?auto=format&fit=crop&w=1200&q=60" alt="Cilindros de gas refrigerante">
+                        </div>
                         <div class="card-title">
                             <i class="fas fa-gas-pump"></i>
                             <h3>Gases Refrigerantes</h3>
@@ -754,9 +819,17 @@
                             <li>134A, R600, R290, 404</li>
                             <li>Presentación pequeña, grande y pipetas</li>
                         </ul>
+                        <div class="price">Desde $22.000 COP</div>
+                        <div class="card-actions">
+                            <button class="btn btn-primary btn-small js-open-modal" type="button">Elegir opción</button>
+                            <button class="btn btn-whatsapp btn-small" type="button"><i class="fab fa-whatsapp"></i> Cotizar</button>
+                        </div>
                     </article>
 
-                    <article class="catalog-card">
+                    <article class="catalog-card" data-category="lavado" data-brands="lg samsung" data-search="mangueras aire lavadoras lg samsung" data-options="Lavadora LG/Samsung|Aire split|Universal" data-price="Desde $18.000 COP">
+                        <div class="catalog-image">
+                            <img src="https://images.unsplash.com/photo-1764046907576-6786dee69c51?auto=format&fit=crop&w=1200&q=60" alt="Mangueras para aire y lavadoras">
+                        </div>
                         <div class="card-title">
                             <i class="fas fa-water"></i>
                             <h3>Mangueras</h3>
@@ -765,9 +838,17 @@
                             <li>Para aire y lavadoras</li>
                             <li>Compatibles LG, Samsung y más</li>
                         </ul>
+                        <div class="price">Desde $18.000 COP</div>
+                        <div class="card-actions">
+                            <button class="btn btn-primary btn-small js-open-modal" type="button">Elegir opción</button>
+                            <button class="btn btn-whatsapp btn-small" type="button"><i class="fab fa-whatsapp"></i> Cotizar</button>
+                        </div>
                     </article>
 
-                    <article class="catalog-card">
+                    <article class="catalog-card" data-category="refrigeracion" data-brands="" data-search="tuberias cobre 3/16 1/4 5/16 3/8 1/2 rollo" data-options="3/16|1/4|5/16|3/8|1/2" data-price="Desde $22.000 COP / metro">
+                        <div class="catalog-image">
+                            <img src="https://images.unsplash.com/photo-1723988429049-0a42e45e8501?auto=format&fit=crop&w=1200&q=60" alt="Tuberías y válvulas para refrigeración">
+                        </div>
                         <div class="card-title">
                             <i class="fas fa-ruler-combined"></i>
                             <h3>Tuberías</h3>
@@ -776,9 +857,17 @@
                             <li>3/16, 1/4, 1/2 y más</li>
                             <li>Por metro o por rollo</li>
                         </ul>
+                        <div class="price">Desde $22.000 COP / metro</div>
+                        <div class="card-actions">
+                            <button class="btn btn-primary btn-small js-open-modal" type="button">Elegir opción</button>
+                            <button class="btn btn-whatsapp btn-small" type="button"><i class="fab fa-whatsapp"></i> Cotizar</button>
+                        </div>
                     </article>
 
-                    <article class="catalog-card">
+                    <article class="catalog-card" data-category="lavado" data-brands="haceb goldy" data-search="transmisiones 631 haceb 7023 goldy 3124" data-options="631|Haceb|7023|Goldy|3124" data-price="Desde $35.000 COP">
+                        <div class="catalog-image">
+                            <img src="https://images.unsplash.com/photo-1668340793807-12105bce147b?auto=format&fit=crop&w=1200&q=60" alt="Engranajes y transmisiones">
+                        </div>
                         <div class="card-title">
                             <i class="fas fa-gears"></i>
                             <h3>Transmisiones</h3>
@@ -787,9 +876,17 @@
                             <li>631, Haceb, 7023</li>
                             <li>Goldy, 3124</li>
                         </ul>
+                        <div class="price">Desde $35.000 COP</div>
+                        <div class="card-actions">
+                            <button class="btn btn-primary btn-small js-open-modal" type="button">Elegir opción</button>
+                            <button class="btn btn-whatsapp btn-small" type="button"><i class="fab fa-whatsapp"></i> Cotizar</button>
+                        </div>
                     </article>
 
-                    <article class="catalog-card">
+                    <article class="catalog-card" data-category="lavado" data-brands="amazonas" data-search="correas 20.5 21.6 amazonas 853" data-options="20.5|21.6|Amazonas|853" data-price="Desde $28.000 COP">
+                        <div class="catalog-image">
+                            <img src="https://images.unsplash.com/photo-1763952626662-419b004e1783?auto=format&fit=crop&w=1200&q=60" alt="Correas y motor industrial">
+                        </div>
                         <div class="card-title">
                             <i class="fas fa-circle-notch"></i>
                             <h3>Correas</h3>
@@ -798,9 +895,17 @@
                             <li>20.5, 21.6, 853</li>
                             <li>Amazonas y otras referencias</li>
                         </ul>
+                        <div class="price">Desde $28.000 COP</div>
+                        <div class="card-actions">
+                            <button class="btn btn-primary btn-small js-open-modal" type="button">Elegir opción</button>
+                            <button class="btn btn-whatsapp btn-small" type="button"><i class="fab fa-whatsapp"></i> Cotizar</button>
+                        </div>
                     </article>
 
-                    <article class="catalog-card">
+                    <article class="catalog-card" data-category="electricidad" data-brands="elco" data-search="motores difusores elco chinos 110v 220v" data-options="Difusores|Motores Elco|Chinos 110V|Chinos 220V" data-price="Desde $95.000 COP">
+                        <div class="catalog-image">
+                            <img src="https://images.unsplash.com/photo-1763952626662-419b004e1783?auto=format&fit=crop&w=1200&q=60" alt="Motor eléctrico para equipos">
+                        </div>
                         <div class="card-title">
                             <i class="fas fa-fan"></i>
                             <h3>Motores</h3>
@@ -809,9 +914,17 @@
                             <li>Difusores y motores Elco</li>
                             <li>Chinos, 110V y 220V</li>
                         </ul>
+                        <div class="price">Desde $95.000 COP</div>
+                        <div class="card-actions">
+                            <button class="btn btn-primary btn-small js-open-modal" type="button">Elegir opción</button>
+                            <button class="btn btn-whatsapp btn-small" type="button"><i class="fab fa-whatsapp"></i> Cotizar</button>
+                        </div>
                     </article>
 
-                    <article class="catalog-card">
+                    <article class="catalog-card" data-category="electricidad" data-brands="" data-search="termicos relays perillas valvulas estufas" data-options="Térmico universal|Relay 3 pines|Perilla estufa|Válvula estufa" data-price="Desde $12.000 COP">
+                        <div class="catalog-image">
+                            <img src="https://images.unsplash.com/photo-1727119313143-779799ad0aed?auto=format&fit=crop&w=1200&q=60" alt="Componentes eléctricos y relays">
+                        </div>
                         <div class="card-title">
                             <i class="fas fa-plug-circle-bolt"></i>
                             <h3>Componentes Eléctricos</h3>
@@ -820,9 +933,17 @@
                             <li>Térmicos y relays</li>
                             <li>Perillas y válvulas de estufas</li>
                         </ul>
+                        <div class="price">Desde $12.000 COP</div>
+                        <div class="card-actions">
+                            <button class="btn btn-primary btn-small js-open-modal" type="button">Elegir opción</button>
+                            <button class="btn btn-whatsapp btn-small" type="button"><i class="fab fa-whatsapp"></i> Cotizar</button>
+                        </div>
                     </article>
 
-                    <article class="catalog-card">
+                    <article class="catalog-card" data-category="electricidad" data-brands="haceb mabe" data-search="timer haceb mabe" data-options="Haceb|Mabe|Universal" data-price="Desde $45.000 COP">
+                        <div class="catalog-image">
+                            <img src="https://images.unsplash.com/photo-1747227659691-22694fc0b0d0?auto=format&fit=crop&w=1200&q=60" alt="Controlador digital de temperatura">
+                        </div>
                         <div class="card-title">
                             <i class="fas fa-clock"></i>
                             <h3>Timer</h3>
@@ -830,9 +951,17 @@
                         <ul>
                             <li>Haceb, Mabe y más</li>
                         </ul>
+                        <div class="price">Desde $45.000 COP</div>
+                        <div class="card-actions">
+                            <button class="btn btn-primary btn-small js-open-modal" type="button">Elegir opción</button>
+                            <button class="btn btn-whatsapp btn-small" type="button"><i class="fab fa-whatsapp"></i> Cotizar</button>
+                        </div>
                     </article>
 
-                    <article class="catalog-card">
+                    <article class="catalog-card" data-category="aire" data-brands="" data-search="controles aire digitales universales" data-options="Digital|Universal" data-price="Desde $60.000 COP">
+                        <div class="catalog-image">
+                            <img src="https://images.unsplash.com/photo-1723706106690-2d762391ff30?auto=format&fit=crop&w=1200&q=60" alt="Control remoto de aire acondicionado">
+                        </div>
                         <div class="card-title">
                             <i class="fas fa-sliders"></i>
                             <h3>Controles de Aire</h3>
@@ -840,9 +969,17 @@
                         <ul>
                             <li>Digitales y universales</li>
                         </ul>
+                        <div class="price">Desde $60.000 COP</div>
+                        <div class="card-actions">
+                            <button class="btn btn-primary btn-small js-open-modal" type="button">Elegir opción</button>
+                            <button class="btn btn-whatsapp btn-small" type="button"><i class="fab fa-whatsapp"></i> Cotizar</button>
+                        </div>
                     </article>
 
-                    <article class="catalog-card">
+                    <article class="catalog-card" data-category="aire" data-brands="" data-search="tarjetas aire placas electronicas" data-options="Universal|Repuesto original" data-price="Desde $120.000 COP">
+                        <div class="catalog-image">
+                            <img src="https://images.unsplash.com/photo-1727119313143-779799ad0aed?auto=format&fit=crop&w=1200&q=60" alt="Tarjeta electrónica de aire">
+                        </div>
                         <div class="card-title">
                             <i class="fas fa-microchip"></i>
                             <h3>Tarjetas de Aire</h3>
@@ -850,9 +987,17 @@
                         <ul>
                             <li>Repuestos electrónicos y módulos</li>
                         </ul>
+                        <div class="price">Desde $120.000 COP</div>
+                        <div class="card-actions">
+                            <button class="btn btn-primary btn-small js-open-modal" type="button">Elegir opción</button>
+                            <button class="btn btn-whatsapp btn-small" type="button"><i class="fab fa-whatsapp"></i> Cotizar</button>
+                        </div>
                     </article>
 
-                    <article class="catalog-card">
+                    <article class="catalog-card" data-category="lavado" data-brands="" data-search="relojes lavado secado lavadoras secadoras" data-options="Lavado|Secado|Universal" data-price="Desde $55.000 COP">
+                        <div class="catalog-image">
+                            <img src="https://images.unsplash.com/photo-1626806787461-102c1bfaaea1?auto=format&fit=crop&w=1200&q=60" alt="Lavadora para repuestos">
+                        </div>
                         <div class="card-title">
                             <i class="fas fa-stopwatch"></i>
                             <h3>Relojes de Lavado y Secado</h3>
@@ -860,19 +1005,35 @@
                         <ul>
                             <li>Repuestos para lavadoras y secadoras</li>
                         </ul>
+                        <div class="price">Desde $55.000 COP</div>
+                        <div class="card-actions">
+                            <button class="btn btn-primary btn-small js-open-modal" type="button">Elegir opción</button>
+                            <button class="btn btn-whatsapp btn-small" type="button"><i class="fab fa-whatsapp"></i> Cotizar</button>
+                        </div>
                     </article>
 
-                    <article class="catalog-card">
+                    <article class="catalog-card" data-category="lavado" data-brands="whirlpool samsung" data-search="filtros lavadora whirlpool samsung" data-options="Whirlpool|Samsung|Universal" data-price="Desde $25.000 COP">
+                        <div class="catalog-image">
+                            <img src="https://images.unsplash.com/photo-1702534554606-9567319a22a9?auto=format&fit=crop&w=1200&q=60" alt="Filtro de aire y ventilación">
+                        </div>
                         <div class="card-title">
                             <i class="fas fa-filter"></i>
                             <h3>Filtros de Lavadora</h3>
                         </div>
                         <ul>
-                            <li>Whirpool, Samsung y más</li>
+                            <li>Whirlpool, Samsung y más</li>
                         </ul>
+                        <div class="price">Desde $25.000 COP</div>
+                        <div class="card-actions">
+                            <button class="btn btn-primary btn-small js-open-modal" type="button">Elegir opción</button>
+                            <button class="btn btn-whatsapp btn-small" type="button"><i class="fab fa-whatsapp"></i> Cotizar</button>
+                        </div>
                     </article>
 
-                    <article class="catalog-card">
+                    <article class="catalog-card" data-category="aire" data-brands="" data-search="bases aire 1 caballo 2 caballos" data-options="1 Caballo|2 Caballos|Universal" data-price="Desde $85.000 COP">
+                        <div class="catalog-image">
+                            <img src="https://images.unsplash.com/photo-1724488751821-1415f5cf4960?auto=format&fit=crop&w=1200&q=60" alt="Base para unidad de aire acondicionado">
+                        </div>
                         <div class="card-title">
                             <i class="fas fa-boxes-stacked"></i>
                             <h3>Bases de Aire</h3>
@@ -880,9 +1041,17 @@
                         <ul>
                             <li>1 caballo y 2 caballos</li>
                         </ul>
+                        <div class="price">Desde $85.000 COP</div>
+                        <div class="card-actions">
+                            <button class="btn btn-primary btn-small js-open-modal" type="button">Elegir opción</button>
+                            <button class="btn btn-whatsapp btn-small" type="button"><i class="fab fa-whatsapp"></i> Cotizar</button>
+                        </div>
                     </article>
 
-                    <article class="catalog-card">
+                    <article class="catalog-card" data-category="aire" data-brands="" data-search="forros lavado de aire filtros pad" data-options="Estándar|Alta densidad" data-price="Desde $30.000 COP">
+                        <div class="catalog-image">
+                            <img src="https://images.unsplash.com/photo-1702534554606-9567319a22a9?auto=format&fit=crop&w=1200&q=60" alt="Filtro para lavado de aire">
+                        </div>
                         <div class="card-title">
                             <i class="fas fa-wind"></i>
                             <h3>Forros de Lavado de Aire</h3>
@@ -890,6 +1059,11 @@
                         <ul>
                             <li>Accesorios de mantenimiento</li>
                         </ul>
+                        <div class="price">Desde $30.000 COP</div>
+                        <div class="card-actions">
+                            <button class="btn btn-primary btn-small js-open-modal" type="button">Elegir opción</button>
+                            <button class="btn btn-whatsapp btn-small" type="button"><i class="fab fa-whatsapp"></i> Cotizar</button>
+                        </div>
                     </article>
                 </div>
             </div>
@@ -908,6 +1082,19 @@
             </div>
         </section>
     </main>
+
+    <div class="modal" id="productoModal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="modalTitle">
+        <div class="modal-card">
+            <button class="modal-close" type="button" data-close aria-label="Cerrar">×</button>
+            <h3 id="modalTitle">Selecciona una opción</h3>
+            <p class="modal-price" id="modalPrice"></p>
+            <div class="modal-options" id="modalOptions"></div>
+            <div class="modal-actions">
+                <button class="btn btn-primary btn-small" type="button">Agregar a cotización</button>
+                <button class="btn btn-whatsapp btn-small" type="button"><i class="fab fa-whatsapp"></i> Cotizar</button>
+            </div>
+        </div>
+    </div>
 
     <footer>
         <div class="footer-content">
@@ -935,5 +1122,104 @@
             <p>&copy; 2026 Almacén Refrielectrico. Todos los derechos reservados.</p>
         </div>
     </footer>
+
+    <script>
+        const cards = Array.from(document.querySelectorAll('.catalog-card'));
+        const searchInput = document.getElementById('buscarProducto');
+        const categorySelect = document.getElementById('filtroCategoria');
+        const brandSelect = document.getElementById('filtroMarca');
+        const resultsCount = document.getElementById('resultsCount');
+        const noResults = document.getElementById('noResults');
+
+        function filterCards() {
+            const query = (searchInput.value || '').toLowerCase().trim();
+            const category = categorySelect.value;
+            const brand = brandSelect.value;
+            let visible = 0;
+
+            cards.forEach(card => {
+                const searchText = (card.dataset.search || '').toLowerCase();
+                const cardCategory = card.dataset.category || 'all';
+                const brands = (card.dataset.brands || '').toLowerCase();
+
+                const matchesQuery = !query || searchText.includes(query);
+                const matchesCategory = category === 'all' || cardCategory === category;
+                const matchesBrand = brand === 'all' || brands.includes(brand);
+
+                const shouldShow = matchesQuery && matchesCategory && matchesBrand;
+                card.style.display = shouldShow ? 'flex' : 'none';
+                if (shouldShow) {
+                    visible += 1;
+                }
+            });
+
+            resultsCount.textContent = `${visible} productos disponibles`;
+            noResults.classList.toggle('visible', visible === 0);
+        }
+
+        [searchInput, categorySelect, brandSelect].forEach(element => {
+            if (!element) return;
+            element.addEventListener('input', filterCards);
+            element.addEventListener('change', filterCards);
+        });
+
+        filterCards();
+
+        const modal = document.getElementById('productoModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalPrice = document.getElementById('modalPrice');
+        const modalOptions = document.getElementById('modalOptions');
+        const closeButtons = document.querySelectorAll('[data-close]');
+
+        function openModal(card) {
+            const title = card.querySelector('h3')?.textContent || 'Producto';
+            const price = card.dataset.price || '';
+            const options = (card.dataset.options || '').split('|').filter(Boolean);
+
+            modalTitle.textContent = title;
+            modalPrice.textContent = price;
+            modalOptions.innerHTML = options.length
+                ? options.map((option, index) => `
+                    <label class="modal-option">
+                        <input type="radio" name="opcion" ${index === 0 ? 'checked' : ''}>
+                        ${option}
+                    </label>
+                `).join('')
+                : '<p class="modal-option">Consulta disponibilidad específica.</p>';
+
+            modal.classList.add('open');
+            modal.setAttribute('aria-hidden', 'false');
+        }
+
+        function closeModal() {
+            modal.classList.remove('open');
+            modal.setAttribute('aria-hidden', 'true');
+        }
+
+        document.querySelectorAll('.js-open-modal').forEach(button => {
+            button.addEventListener('click', () => {
+                const card = button.closest('.catalog-card');
+                if (card) {
+                    openModal(card);
+                }
+            });
+        });
+
+        closeButtons.forEach(button => {
+            button.addEventListener('click', closeModal);
+        });
+
+        modal.addEventListener('click', event => {
+            if (event.target === modal) {
+                closeModal();
+            }
+        });
+
+        document.addEventListener('keydown', event => {
+            if (event.key === 'Escape' && modal.classList.contains('open')) {
+                closeModal();
+            }
+        });
+    </script>
 </body>
 </html>
