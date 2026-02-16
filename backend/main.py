@@ -1,0 +1,155 @@
+from typing import List
+from fastapi import FastAPI, Depends, HTTPException, status
+from fastapi.middleware.cors import CORSMiddleware
+from sqlalchemy.orm import Session
+from datetime import timedelta
+from fastapi.security import OAuth2PasswordRequestForm
+from . import models, schemas, database, auth
+
+# Create tables
+models.Base.metadata.create_all(bind=database.engine)
+
+app = FastAPI()
+
+# CORS
+origins = [
+    "*", # Allow all origins for development (fixes issues with local file opening)
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Dependency
+def get_db():
+    db = database.SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+# Auth Endpoints
+@app.post("/token", response_model=schemas.Token)
+async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+    user = db.query(models.User).filter(models.User.username == form_data.username).first()
+    if not user or not auth.verify_password(form_data.password, user.hashed_password):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect username or password",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    access_token_expires = timedelta(minutes=auth.ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token = auth.create_access_token(
+        data={"sub": user.username}, expires_delta=access_token_expires
+    )
+    return {"access_token": access_token, "token_type": "bearer"}
+
+@app.get("/users/me", response_model=schemas.UserCreate) # Only returning username for now
+async def read_users_me(current_user: models.User = Depends(auth.get_current_user)):
+    return {"username": current_user.username, "password": ""} # Don't return password hash
+
+# Product Endpoints
+@app.get("/products/", response_model=List[schemas.Product])
+def read_products(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    products = db.query(models.Product).offset(skip).limit(limit).all()
+    return products
+
+@app.post("/products/", response_model=schemas.Product)
+def create_product(product: schemas.ProductCreate, db: Session = Depends(get_db), current_user: models.User = Depends(auth.get_current_user)):
+    db_product = models.Product(**product.dict())
+    db.add(db_product)
+    db.commit()
+    db.refresh(db_product)
+    return db_product
+
+@app.put("/products/{product_id}", response_model=schemas.Product)
+def update_product(product_id: int, product: schemas.ProductCreate, db: Session = Depends(get_db), current_user: models.User = Depends(auth.get_current_user)):
+    db_product = db.query(models.Product).filter(models.Product.id == product_id).first()
+    if db_product is None:
+        raise HTTPException(status_code=404, detail="Product not found")
+    
+    for key, value in product.dict().items():
+        setattr(db_product, key, value)
+    
+    db.commit()
+    db.refresh(db_product)
+    return db_product
+
+@app.delete("/products/{product_id}")
+def delete_product(product_id: int, db: Session = Depends(get_db), current_user: models.User = Depends(auth.get_current_user)):
+    db_product = db.query(models.Product).filter(models.Product.id == product_id).first()
+    if db_product is None:
+        raise HTTPException(status_code=404, detail="Product not found")
+    
+    db.delete(db_product)
+    db.commit()
+    return {"ok": True}
+
+# Quotation Endpoints
+@app.post("/quotations/", response_model=schemas.Quotation)
+def create_quotation(quotation: schemas.QuotationCreate, db: Session = Depends(get_db)):
+    db_quotation = models.Quotation(**quotation.dict())
+    db.add(db_quotation)
+    db.commit()
+    db.refresh(db_quotation)
+    return db_quotation
+
+@app.get("/stats", response_model=schemas.AnalyticsStats)
+def get_stats(db: Session = Depends(get_db)):
+    quotations = db.query(models.Quotation).all()
+    
+    total_quoted = sum(q.total_estimated for q in quotations)
+    total_purchased = sum(q.total_estimated for q in quotations if q.status == "Purchased")
+    
+    # Calculate top products
+    product_counts = {}
+    for q in quotations:
+        if q.items:
+            # Items are stored as JSON list of dicts
+            for item in q.items:
+                name = item.get("product_name", "Unknown")
+                qty = item.get("quantity", 1)
+                product_counts[name] = product_counts.get(name, 0) + qty
+    
+    top_products = [
+        schemas.TopProduct(name=name, count=count)
+        for name, count in sorted(product_counts.items(), key=lambda item: item[1], reverse=True)[:5]
+    ]
+
+    # Calculate sales history (purchased only)
+    sales_by_date = {}
+    for q in quotations:
+        if q.status == "Purchased":
+            date_str = q.created_at.strftime("%Y-%m-%d")
+            sales_by_date[date_str] = sales_by_date.get(date_str, 0) + q.total_estimated
+            
+    sales_history = [
+        schemas.SalesData(date=date, amount=amount)
+        for date, amount in sorted(sales_by_date.items())
+    ]
+    
+    return schemas.AnalyticsStats(
+        total_quoted=total_quoted,
+        total_purchased=total_purchased,
+        top_products=top_products,
+        sales_history=sales_history
+    )
+
+@app.get("/quotations/", response_model=List[schemas.Quotation])
+def read_quotations(skip: int = 0, limit: int = 100, db: Session = Depends(get_db), current_user: models.User = Depends(auth.get_current_user)):
+    quotations = db.query(models.Quotation).order_by(models.Quotation.created_at.desc()).offset(skip).limit(limit).all()
+    return quotations
+
+@app.put("/quotations/{quotation_id}/status")
+def update_quotation_status(quotation_id: int, status: str, db: Session = Depends(get_db), current_user: models.User = Depends(auth.get_current_user)):
+    db_quotation = db.query(models.Quotation).filter(models.Quotation.id == quotation_id).first()
+    if db_quotation is None:
+        raise HTTPException(status_code=404, detail="Quotation not found")
+    
+    db_quotation.status = status
+    db.commit()
+    return {"ok": True}

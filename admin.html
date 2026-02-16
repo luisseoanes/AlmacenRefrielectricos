@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Administrativo | Refrielectrico</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="icon" href="images/Logotipo.ico" type="image/x-icon">
+
+    <style>
+        :root {
+            --primary-color: #0056b3;
+            --secondary-color: #f8f9fa;
+            --text-color: #333;
+            --sidebar-width: 250px;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            display: flex;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: white;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            z-index: 1000;
+        }
+
+        .logo-section {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+        }
+
+        .logo-section h2 {
+            margin: 10px 0 0;
+            color: var(--primary-color);
+            font-size: 1.2rem;
+        }
+
+        .nav-links {
+            list-style: none;
+            padding: 0;
+            margin: 20px 0;
+        }
+
+        .nav-links li {
+            padding: 15px 20px;
+            cursor: pointer;
+            color: #666;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.95rem;
+        }
+
+        .nav-links li:hover,
+        .nav-links li.active {
+            background: #e9f5ff;
+            color: var(--primary-color);
+            border-right: 3px solid var(--primary-color);
+        }
+
+        .logout-btn {
+            margin-top: auto;
+            padding: 15px;
+            background: #ffeaea;
+            color: #d63031;
+            text-align: center;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: #ffcccc;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            padding: 30px;
+            width: calc(100% - var(--sidebar-width));
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: white;
+        }
+
+        .bg-blue {
+            background: #3498db;
+        }
+
+        .bg-green {
+            background: #2ecc71;
+        }
+
+        .bg-orange {
+            background: #e67e22;
+        }
+
+        .stat-info h3 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        .stat-info p {
+            margin: 0;
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        /* Sections */
+        .section-view {
+            display: none;
+        }
+
+        .section-view.active {
+            display: block;
+        }
+
+        .section-header {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .card h3 {
+            margin-top: 0;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+            color: #444;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            background: #f8f9fa;
+            color: #555;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        td {
+            font-size: 0.9rem;
+        }
+
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-purchased {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-cancelled {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .btn-action {
+            width: 30px;
+            height: 30px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 5px;
+            color: white;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+        }
+
+        .btn-approve {
+            background: #2ecc71;
+        }
+
+        .btn-cancel {
+            background: #e74c3c;
+        }
+
+        .btn-edit {
+            background: #f39c12;
+        }
+
+        .btn-delete {
+            background: #e74c3c;
+        }
+
+        /* Charts */
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+        }
+
+        /* Product Form */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .btn-primary:hover {
+            background: #004494;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 60px;
+                overflow: hidden;
+            }
+
+            .sidebar:hover {
+                width: 250px;
+            }
+
+            .logo-section h2,
+            .logo-section p,
+            .nav-links span {
+                display: none;
+            }
+
+            .sidebar:hover .logo-section h2,
+            .sidebar:hover .logo-section p,
+            .sidebar:hover .nav-links span {
+                display: block;
+            }
+
+            .main-content {
+                margin-left: 60px;
+                width: calc(100% - 60px);
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="sidebar">
+        <div class="logo-section">
+            <img src="images/Logo.jpeg" alt="Logo" style="width: 50px; height: 50px; object-fit: contain;">
+            <h2>Refrielectrico</h2>
+            <p style="font-size: 0.8rem; color: #777;">Panel de Admin</p>
+        </div>
+        <ul class="nav-links">
+            <li class="active" onclick="switchView('dashboard')"><i class="fas fa-home"></i> <span>Inicio</span></li>
+            <li onclick="switchView('quotations')"><i class="fas fa-file-invoice"></i> <span>Cotizaciones</span></li>
+            <li onclick="switchView('sales')"><i class="fas fa-shopping-bag"></i> <span>Ventas Realizadas</span></li>
+            <li onclick="switchView('products')"><i class="fas fa-box"></i> <span>Inventario</span></li>
+            <li onclick="getAnalytics() ; switchView('analytics')"><i class="fas fa-chart-line"></i>
+                <span>Analíticas</span></li>
+        </ul>
+        <div class="logout-btn" onclick="logout()">
+            <i class="fas fa-sign-out-alt"></i> <span>Cerrar Sesión</span>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        <!-- Dashboard Overview -->
+        <div id="dashboard" class="section-view active">
+            <div class="section-header">
+                <h2>Resumen General</h2>
+                <button class="btn-primary" onclick="loadDashboardData()"><i class="fas fa-sync-alt"></i>
+                    Actualizar</button>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon bg-blue"><i class="fas fa-dollar-sign"></i></div>
+                    <div class="stat-info">
+                        <h3 id="totalQuoted">$0</h3>
+                        <p>Total Cotizado</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon bg-green"><i class="fas fa-check-circle"></i></div>
+                    <div class="stat-info">
+                        <h3 id="totalPurchased">$0</h3>
+                        <p>Ventas Realizadas</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon bg-orange"><i class="fas fa-box-open"></i></div>
+                    <div class="stat-info">
+                        <h3 id="totalProducts">0</h3>
+                        <p>Productos Activos</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Ventas Confirmadas Recientes</h3>
+                <div style="overflow-x: auto;">
+                    <table id="recentSalesTable">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Cliente</th>
+                                <th>Total</th>
+                                <th>Fecha</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quotations View -->
+        <div id="quotations" class="section-view">
+            <div class="section-header">
+                <h2>Gestión de Cotizaciones</h2>
+                <button class="btn-primary" onclick="loadQuotations()"><i class="fas fa-sync-alt"></i>
+                    Refrescar</button>
+            </div>
+            <div class="card">
+                <div style="overflow-x: auto;">
+                    <table id="quotationsTable">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Cliente</th>
+                                <th>Contacto</th>
+                                <th>Total Estimado</th>
+                                <th>Fecha</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sales View (Purchased only) -->
+        <div id="sales" class="section-view">
+            <div class="section-header">
+                <h2>Historial de Ventas</h2>
+                <button class="btn-primary" onclick="loadSales()"><i class="fas fa-sync-alt"></i> Refrescar</button>
+            </div>
+            <div class="card">
+                <div style="overflow-x: auto;">
+                    <table id="salesTable">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Cliente</th>
+                                <th>Contacto</th>
+                                <th>Total Venta</th>
+                                <th>Fecha</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Products View -->
+        <div id="products" class="section-view">
+            <div class="section-header">
+                <h2>Inventario de Productos</h2>
+                <button class="btn-primary" onclick="toggleProductForm()">+ Nuevo Producto</button>
+            </div>
+
+            <div class="card" id="productFormCard" style="display: none; background: #f8f9fa;">
+                <h3>Agregar / Editar Producto</h3>
+                <div class="form-grid">
+                    <input type="hidden" id="prodId">
+                    <input type="text" id="prodName" placeholder="Nombre del producto">
+                    <input type="text" id="prodCategory" placeholder="Categoría (ej: aire, lavado)">
+                </div>
+                <div class="form-grid">
+                    <input type="number" id="prodPrice" placeholder="Precio (numérico)">
+                    <input type="text" id="prodPriceText" placeholder="Texto Precio (ej: Desde $20.000)">
+                </div>
+                <div class="form-grid">
+                    <input type="text" id="prodImage" placeholder="URL Imagen">
+                    <input type="text" id="prodBrands" placeholder="Marcas (ej: LG, Samsung)">
+                </div>
+                <div class="form-grid">
+                    <input type="text" id="prodTags" placeholder="Tags de búsqueda">
+                    <textarea id="prodOptions" placeholder="Opciones (separadas por |)" rows="1"></textarea>
+                </div>
+                <button class="btn-primary" onclick="saveProduct()">Guardar Producto</button>
+                <button class="btn-action btn-cancel" style="width: auto; padding: 10px;"
+                    onclick="toggleProductForm()">Cancelar</button>
+            </div>
+
+            <div class="card">
+                <div style="overflow-x: auto;">
+                    <table id="productsTable">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Imagen</th>
+                                <th>Nombre</th>
+                                <th>Precio</th>
+                                <th>Categoría</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Analytics View -->
+        <div id="analytics" class="section-view">
+            <div class="section-header">
+                <h2>Analíticas Detalladas</h2>
+                <button class="btn-primary" onclick="getAnalytics()"><i class="fas fa-sync-alt"></i> Actualizar</button>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 20px;">
+                <div class="card">
+                    <h3>Top 5 Productos Más Cotizados</h3>
+                    <ul id="topProductsList" style="list-style: none; padding: 0;"></ul>
+                </div>
+                <div class="card">
+                    <h3>Tendencia de Ventas (Diaria)</h3>
+                    <div class="chart-container">
+                        <canvas id="salesChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:8000';
+
+        // Check Auth
+        const token = localStorage.getItem('token');
+        if (!token) {
+            window.location.href = 'login.html';
+        }
+
+        async function fetchWithAuth(url, options = {}) {
+            options.headers = {
+                ...options.headers,
+                'Authorization': `Bearer ${token}`
+            };
+            const response = await fetch(url, options);
+            if (response.status === 401) {
+                logout();
+            }
+            return response;
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            window.location.href = 'login.html';
+        }
+
+        function switchView(viewId) {
+            document.querySelectorAll('.section-view').forEach(el => el.classList.remove('active'));
+            document.getElementById(viewId).classList.add('active');
+
+            document.querySelectorAll('.nav-links li').forEach(el => el.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+
+            if (viewId === 'quotations') loadQuotations();
+            if (viewId === 'sales') loadSales();
+            if (viewId === 'products') loadProducts();
+            if (viewId === 'dashboard') loadDashboardData();
+        }
+
+        // --- DASHBOARD ---
+        async function loadDashboardData() {
+            try {
+                const response = await fetchWithAuth(`${API_URL}/stats`);
+                const stats = await response.json();
+
+                document.getElementById('totalQuoted').textContent = stats.total_quoted.toLocaleString('es-CO', { style: 'currency', currency: 'COP' });
+                document.getElementById('totalPurchased').textContent = stats.total_purchased.toLocaleString('es-CO', { style: 'currency', currency: 'COP' });
+
+                // Load products count (need to fetch separately or add to stats, for now separate)
+                fetchProductsCount();
+
+                // Load recent sales
+                const qResponse = await fetchWithAuth(`${API_URL}/quotations/`);
+                const quotations = await qResponse.json();
+
+                const sales = quotations.filter(q => q.status === 'Purchased').slice(0, 5);
+                const salesBody = document.querySelector('#recentSalesTable tbody');
+                salesBody.innerHTML = sales.map(q => `
+                    <tr>
+                        <td>#${q.id}</td>
+                        <td>${q.customer_name}</td>
+                        <td>${q.total_estimated.toLocaleString('es-CO', { style: 'currency', currency: 'COP' })}</td>
+                        <td>${new Date(q.created_at).toLocaleDateString()}</td>
+                        <td><span class="status-badge status-purchased">Completada</span></td>
+                    </tr>
+                `).join('');
+
+            } catch (error) {
+                console.error('Error loading stats', error);
+            }
+        }
+
+        async function fetchProductsCount() {
+            const response = await fetch(`${API_URL}/products/`);
+            const products = await response.json();
+            document.getElementById('totalProducts').textContent = products.length;
+        }
+
+        // --- QUOTATIONS ---
+        async function loadQuotations() {
+            try {
+                const response = await fetchWithAuth(`${API_URL}/quotations/`);
+                const quotations = await response.json();
+
+                const tbody = document.querySelector('#quotationsTable tbody');
+                tbody.innerHTML = quotations.map(q => `
+                    <tr>
+                        <td>#${q.id}</td>
+                        <td>${q.customer_name}</td>
+                        <td>${q.customer_contact}</td>
+                        <td>${q.total_estimated.toLocaleString('es-CO', { style: 'currency', currency: 'COP' })}</td>
+                        <td>${new Date(q.created_at).toLocaleDateString()}</td>
+                        <td>
+                            <span class="status-badge status-${q.status.toLowerCase()}">${q.status}</span>
+                        </td>
+                        <td>
+                            ${q.status === 'Pending' ? `
+                                <button class="btn-action btn-approve" title="Marcar como Comprado" onclick="updateStatus(${q.id}, 'Purchased')"><i class="fas fa-check"></i></button>
+                                <button class="btn-action btn-cancel" title="Cancelar Cotización" onclick="updateStatus(${q.id}, 'Cancelled')"><i class="fas fa-times"></i></button>
+                            ` : '-'}
+                        </td>
+                    </tr>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading quotations', error);
+            }
+        }
+
+        // --- SALES ---
+        async function loadSales() {
+            try {
+                const response = await fetchWithAuth(`${API_URL}/quotations/`);
+                const quotations = await response.json();
+                const sales = quotations.filter(q => q.status === 'Purchased');
+
+                const tbody = document.querySelector('#salesTable tbody');
+                tbody.innerHTML = sales.map(q => `
+                    <tr>
+                        <td>#${q.id}</td>
+                        <td>${q.customer_name}</td>
+                        <td>${q.customer_contact}</td>
+                        <td>${q.total_estimated.toLocaleString('es-CO', { style: 'currency', currency: 'COP' })}</td>
+                        <td>${new Date(q.created_at).toLocaleDateString()}</td>
+                        <td><span class="status-badge status-purchased">Completada</span></td>
+                    </tr>
+                `).join('');
+            } catch (error) { console.error(error); }
+        }
+
+        async function updateStatus(id, status) {
+            if (!confirm(`¿Marcar cotización #${id} como ${status}?`)) return;
+            try {
+                await fetchWithAuth(`${API_URL}/quotations/${id}/status?status=${status}`, { method: 'PUT' });
+                // Reload current view context
+                loadQuotations();
+                loadSales(); // In case we switched
+                loadDashboardData(); // Refresh global stats
+            } catch (error) {
+                console.error('Error updating status', error);
+            }
+        }
+
+        // --- ANALYTICS ---
+        async function getAnalytics() {
+            try {
+                const response = await fetchWithAuth(`${API_URL}/stats`);
+                const stats = await response.json();
+
+                // Top Products
+                const topList = document.getElementById('topProductsList');
+                topList.innerHTML = stats.top_products.map(p => `
+                    <li style="padding: 10px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center;">
+                        <span><i class="fas fa-box" style="margin-right:10px; color: #ccc;"></i> ${p.name}</span>
+                        <span style="font-weight: bold; color: var(--primary-color); background: #e9f5ff; padding: 2px 8px; border-radius: 10px;">x${p.count}</span>
+                    </li>
+                `).join('');
+
+                // Sales Chart
+                renderSalesChart(stats.sales_history);
+
+            } catch (error) {
+                console.error('Error loading analytics', error);
+            }
+        }
+
+        let chartInstance = null;
+        function renderSalesChart(history) {
+            const ctx = document.getElementById('salesChart').getContext('2d');
+
+            if (chartInstance) chartInstance.destroy();
+
+            chartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: history.map(h => h.date),
+                    datasets: [{
+                        label: 'Ventas ($)',
+                        data: history.map(h => h.amount),
+                        borderColor: '#2ecc71',
+                        backgroundColor: 'rgba(46, 204, 113, 0.1)',
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: '#2ecc71'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: '#f0f0f0' }
+                        },
+                        x: {
+                            grid: { display: false }
+                        }
+                    }
+                }
+            });
+        }
+
+        // --- PRODUCTS ---
+        async function loadProducts() {
+            try {
+                const response = await fetch(`${API_URL}/products/`);
+                const products = await response.json();
+
+                const tbody = document.querySelector('#productsTable tbody');
+                tbody.innerHTML = products.map(p => `
+                    <tr>
+                        <td>${p.id}</td>
+                        <td><img src="${p.image_url}" style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px;" onerror="this.style.display='none'"></td>
+                        <td>${p.name}</td>
+                        <td>${p.price_text}</td>
+                        <td>${p.category}</td>
+                        <td>
+                            <button class="btn-action btn-delete" onclick="deleteProduct(${p.id})"><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>
+                 `).join('');
+            } catch (e) { console.error(e); }
+        }
+
+        function toggleProductForm() {
+            const form = document.getElementById('productFormCard');
+            form.style.display = form.style.display === 'none' ? 'block' : 'none';
+        }
+
+        async function saveProduct() {
+            const product = {
+                name: document.getElementById('prodName').value,
+                category: document.getElementById('prodCategory').value,
+                price: parseFloat(document.getElementById('prodPrice').value) || 0,
+                price_text: document.getElementById('prodPriceText').value,
+                image_url: document.getElementById('prodImage').value,
+                brands: document.getElementById('prodBrands').value,
+                search_tags: document.getElementById('prodTags').value,
+                options: document.getElementById('prodOptions').value
+            };
+
+            try {
+                const response = await fetchWithAuth(`${API_URL}/products/`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(product)
+                });
+
+                if (response.ok) {
+                    toggleProductForm();
+                    loadProducts();
+                    // Clear form
+                    document.querySelectorAll('#productFormCard input, #productFormCard textarea').forEach(i => i.value = '');
+                    loadDashboardData(); // Update count
+                } else {
+                    alert('Error al guardar');
+                }
+            } catch (e) { console.error(e); }
+        }
+
+        async function deleteProduct(id) {
+            if (!confirm('¿Eliminar producto?')) return;
+            try {
+                await fetchWithAuth(`${API_URL}/products/${id}`, { method: 'DELETE' });
+                loadProducts();
+                loadDashboardData();
+            } catch (e) { console.error(e); }
+        }
+
+        // Init
+        loadDashboardData();
+    </script>
+</body>
+
+</html>
