@@ -20,7 +20,7 @@ class Product(ProductBase):
     id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class QuotationItem(BaseModel):
     product_id: int
@@ -41,7 +41,7 @@ class Quotation(QuotationCreate):
     created_at: datetime
     
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class UserCreate(BaseModel):
     username: str

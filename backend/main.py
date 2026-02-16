@@ -153,3 +153,17 @@ def update_quotation_status(quotation_id: int, status: str, db: Session = Depend
     db_quotation.status = status
     db.commit()
     return {"ok": True}
+
+@app.put("/quotations/{quotation_id}/total")
+def update_quotation_total(quotation_id: int, total: float, db: Session = Depends(get_db), current_user: models.User = Depends(auth.get_current_user)):
+    db_quotation = db.query(models.Quotation).filter(models.Quotation.id == quotation_id).first()
+    if db_quotation is None:
+        raise HTTPException(status_code=404, detail="Quotation not found")
+    
+    # Allow updating total only if status is Pending (or verify with user logic, but requested 'before confirming sale')
+    if db_quotation.status != "Pending":
+         raise HTTPException(status_code=400, detail="Cannot update total for confirmed or cancelled quotations")
+
+    db_quotation.total_estimated = total
+    db.commit()
+    return {"ok": True}
