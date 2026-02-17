@@ -671,39 +671,133 @@
             transform: scale(1.1) rotate(5deg);
         }
 
+        /* Footer */
+        footer {
+            background: linear-gradient(135deg, var(--navy) 0%, #0a1220 100%);
+            color: white;
+            padding: 80px 0 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-orange), var(--bright-blue));
+        }
+
         .footer-content {
             max-width: 1200px;
             margin: 0 auto;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 40px;
-            margin-bottom: 40px;
+            grid-template-columns: 1.5fr 1fr 1fr;
+            gap: 60px;
+            margin-bottom: 60px;
+        }
+
+        .brand-section p {
+            margin: 20px 0;
+            max-width: 350px;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .footer-logo img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: white;
+            padding: 5px;
+        }
+
+        .footer-logo h3 {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 2rem;
+            letter-spacing: 2px;
+            margin: 0 !important;
         }
 
         .footer-section h3 {
             font-family: 'Bebas Neue', cursive;
             font-size: 1.6rem;
             letter-spacing: 1px;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
+            color: var(--white);
+            position: relative;
         }
 
-        .footer-section p,
-        .footer-section li {
-            opacity: 0.8;
-            font-size: 0.95rem;
-            line-height: 1.8;
+        .footer-section h3::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 30px;
+            height: 2px;
+            background: var(--bright-blue);
         }
 
         .footer-links {
             list-style: none;
             display: grid;
-            gap: 10px;
+            gap: 15px;
+        }
+
+        .footer-links li {
+            display: flex;
+            gap: 12px;
+            opacity: 0.8;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            transition: opacity 0.3s;
+        }
+
+        .footer-links li:hover {
+            opacity: 1;
+        }
+
+        .footer-links i {
+            color: var(--bright-blue);
+            margin-top: 4px;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .footer-social a {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-social a:hover {
+            background: var(--bright-blue);
+            color: white;
+            transform: translateY(-5px);
+            border-color: var(--bright-blue);
         }
 
         .footer-bottom {
             text-align: center;
             padding-top: 30px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
             font-size: 0.9rem;
             opacity: 0.6;
         }
@@ -743,6 +837,30 @@
             .cart-sidebar {
                 width: 100%;
                 right: -100%;
+            }
+
+            /* Footer Responsive */
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 40px;
+                text-align: center;
+            }
+
+            .brand-section p {
+                margin: 20px auto;
+            }
+
+            .footer-logo {
+                justify-content: center;
+            }
+
+            .footer-section h3::after {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+
+            .footer-links li {
+                justify-content: center;
             }
         }
 

@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:8000';
+const API_URL = 'https://almacenrefrielectricos-production.up.railway.app';
 
 // Check Auth
 const token = localStorage.getItem('token');
