@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
@@ -9,17 +9,13 @@ import os
 VOLUME_PATH = os.getenv("RAILWAY_VOLUME_MOUNT_PATH", ".")
 DB_NAME = "refrielectricos.db"
 
-# Construct the full path. If on Railway, it might be /app/data/refrielectricos.db
-DB_URL_PATH = os.path.join(VOLUME_PATH, DB_NAME)
+# Construct the full path.
+DB_URL_PATH = os.path.abspath(os.path.join(VOLUME_PATH, DB_NAME))
 
-# Ensure the directory exists if it's not current directory
-if VOLUME_PATH != "." and not os.path.exists(VOLUME_PATH):
-    try:
-        os.makedirs(VOLUME_PATH, exist_ok=True)
-    except Exception as e:
-        print(f"Warning: Could not create volume directory {VOLUME_PATH}: {e}")
+# Ensure slashes are forward slashes for SQLite URL (especially on Windows)
+normalized_path = DB_URL_PATH.replace("\\", "/")
 
-SQLALCHEMY_DATABASE_URL = f"sqlite:///{DB_URL_PATH}"
+SQLALCHEMY_DATABASE_URL = f"sqlite:///{normalized_path}"
 
 print(f"Using Database at: {SQLALCHEMY_DATABASE_URL}")
 

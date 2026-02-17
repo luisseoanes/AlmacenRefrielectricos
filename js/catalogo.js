@@ -79,7 +79,7 @@ function filterCards() {
     catalogGrid.innerHTML = '';
 
     const filtered = allProducts.filter(product => {
-        const searchText = (product.name + ' ' + product.search_tags).toLowerCase();
+        const searchText = (product.name + ' ' + (product.code || '') + ' ' + product.search_tags).toLowerCase();
         const matchesQuery = !query || searchText.includes(query);
         const matchesCategory = category === 'all' || product.category === category;
         const matchesBrand = brand === 'all' || product.brands.toLowerCase().includes(brand);

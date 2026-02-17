@@ -264,6 +264,7 @@
                 <h3>Agregar / Editar Producto</h3>
                 <div class="form-grid">
                     <input type="hidden" id="prodId">
+                    <input type="text" id="prodCode" placeholder="Código (ej: REF-001)" style="max-width: 150px;">
                     <input type="text" id="prodName" placeholder="Nombre del producto">
                     <div style="display: flex; gap: 5px;">
                         <select id="prodCategory" style="flex: 1;" onchange="onCategoryChange(this.value)">
@@ -310,6 +311,7 @@
                         <thead>
                             <tr>
                                 <th>ID</th>
+                                <th>Código</th>
                                 <th>Imagen</th>
                                 <th>Nombre</th>
                                 <th>Precio</th>

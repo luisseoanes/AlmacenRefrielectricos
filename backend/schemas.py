@@ -16,6 +16,7 @@ class Category(CategoryBase):
 
 class ProductBase(BaseModel):
     name: str
+    code: Optional[str] = None
     category: str
     price: float
     price_text: str

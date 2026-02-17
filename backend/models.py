@@ -21,6 +21,7 @@ class Product(Base):
     __tablename__ = "products"
 
     id = Column(Integer, primary_key=True, index=True)
+    code = Column(String, index=True, nullable=True)
     name = Column(String, index=True)
     category = Column(String, index=True) # aire, refrigeracion, lavado, electricidad, consumibles
     price = Column(Float) # Store as float for simplicity, consider Decimal for serious financial apps

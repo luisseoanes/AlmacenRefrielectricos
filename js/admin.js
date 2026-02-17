@@ -593,6 +593,7 @@ async function loadProducts() {
         tbody.innerHTML = products.map(p => `
                     <tr>
                         <td>${p.id}</td>
+                        <td><span class="badge" style="background: #f1f3f5; color: #495057; font-weight: 600;">${p.code || 'S/N'}</span></td>
                         <td><img src="${p.image_url}" style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px;" onerror="this.style.display='none'"></td>
                         <td>${p.name}</td>
                         <td>${p.price_text}</td>
@@ -622,6 +623,7 @@ async function saveProduct() {
     const id = document.getElementById('prodId').value;
     const product = {
         name: document.getElementById('prodName').value,
+        code: document.getElementById('prodCode').value,
         category: document.getElementById('prodCategory').value,
         price: parseFloat(document.getElementById('prodPrice').value) || 0,
         price_text: document.getElementById('prodPriceText').value,
@@ -657,7 +659,10 @@ async function saveProduct() {
             loadProducts();
             // Clear form
             document.getElementById('prodId').value = '';
-            document.querySelectorAll('#productFormCard input, #productFormCard textarea, #productFormCard select').forEach(i => i.value = '');
+            document.getElementById('prodCode').value = '';
+            document.querySelectorAll('#productFormCard input, #productFormCard textarea, #productFormCard select').forEach(i => {
+                if (i.id !== 'prodCode' && i.id !== 'prodId') i.value = '';
+            });
             loadDashboardData(); // Update count
         } else {
             showToast('Error al guardar', 'error');
@@ -670,6 +675,7 @@ async function saveProduct() {
 
 async function editProduct(product) {
     document.getElementById('prodId').value = product.id;
+    document.getElementById('prodCode').value = product.code || '';
     document.getElementById('prodName').value = product.name;
 
     await loadCategories(); // Load before setting value
