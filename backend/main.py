@@ -164,9 +164,28 @@ def update_quotation_total(quotation_id: int, total: float, db: Session = Depend
     if db_quotation.status != "Pending":
          raise HTTPException(status_code=400, detail="Cannot update total for confirmed or cancelled quotations")
 
-    db_quotation.total_estimated = total
-    db.commit()
-    return {"ok": True}
+
+import shutil
+from fastapi import FastAPI, Depends, HTTPException, status, UploadFile, File
+
+# ... existing imports ...
+
+@app.post("/admin/upload-db")
+async def upload_db(file: UploadFile = File(...), current_user: models.User = Depends(auth.get_current_user)):
+    """
+    Endpoint temporal para subir la base de datos sqlite al volumen de Railway.
+    Sobreescribe la base de datos actual.
+    """
+    try:
+        # Use the path defined in database.py
+        destination_path = database.DB_URL_PATH
+        
+        with open(destination_path, "wb") as buffer:
+            shutil.copyfileobj(file.file, buffer)
+            
+        return {"filename": file.filename, "message": "Database uploaded successfully to " + destination_path}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Could not upload database: {str(e)}")
 
 @app.put("/quotations/{quotation_id}/items")
 def update_quotation_items(quotation_id: int, items: List[schemas.QuotationItem], db: Session = Depends(get_db), current_user: models.User = Depends(auth.get_current_user)):
