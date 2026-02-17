@@ -710,32 +710,7 @@ async function deleteProduct(id) {
     });
 }
 
-async function resetDatabase() {
-    showConfirm(
-        '¡PELIGRO: REINICIAR BASE DE DATOS!',
-        'Esta acción ELIMINARÁ todos los productos, categorías y cotizaciones de forma permanente. Tu usuario de administrador NO será borrado. ¿Deseas continuar bajo tu propia responsabilidad?',
-        async () => {
-            try {
-                const response = await fetchWithAuth(`${API_URL}/admin/reset-db`, {
-                    method: 'POST'
-                });
 
-                if (!response.ok) throw new Error('Error al reiniciar');
-
-                const result = await response.json();
-                showToast(result.message, 'success');
-
-                // Reload dashboard
-                setTimeout(() => {
-                    window.location.reload();
-                }, 2000);
-            } catch (e) {
-                console.error(e);
-                showToast('No se pudo completar el reinicio', 'error');
-            }
-        }
-    );
-}
 
 // Init
 loadDashboardData();
