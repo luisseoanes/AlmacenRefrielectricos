@@ -50,11 +50,12 @@ seed_categories()
 
 app = FastAPI()
 
-# CORS
+# CORS - Allow Vercel frontend
 origins = [
-    "*", # Allow all for development
+    "http://localhost",
+    "http://localhost:8000",
+    "http://localhost:5500",
     "https://almacen-refrielectricos.vercel.app",
-    "https://almacen-refrielectricos.vercel.app/catalogo.html"
 ]
 
 app.add_middleware(
