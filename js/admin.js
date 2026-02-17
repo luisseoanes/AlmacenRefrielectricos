@@ -36,6 +36,65 @@ function switchView(viewId) {
     if (viewId === 'dashboard') loadDashboardData();
 }
 
+// --- UI HELPERS ---
+function showToast(message, type = 'success') {
+    const container = document.getElementById('toast-container');
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+
+    let icon = 'info-circle';
+    if (type === 'success') icon = 'check-circle';
+    if (type === 'error') icon = 'exclamation-circle';
+    if (type === 'warning') icon = 'exclamation-triangle';
+
+    toast.innerHTML = `
+        <i class="fas fa-${icon}"></i>
+        <div class="toast-content">${message}</div>
+    `;
+
+    container.appendChild(toast);
+
+    setTimeout(() => {
+        toast.style.animation = 'fadeOut 0.5s ease-in forwards';
+        setTimeout(() => toast.remove(), 500);
+    }, 4000);
+}
+
+function showConfirm(title, message, callback) {
+    const modal = document.getElementById('interactiveModal');
+    document.getElementById('interactiveModalTitle').textContent = title;
+    document.getElementById('interactiveModalMessage').textContent = message;
+    document.getElementById('interactiveModalInputContainer').style.display = 'none';
+
+    const confirmBtn = document.getElementById('interactiveModalConfirmBtn');
+    confirmBtn.onclick = () => {
+        closeModal('interactiveModal');
+        callback();
+    };
+
+    modal.style.display = 'block';
+}
+
+function showPrompt(title, message, defaultValue, callback) {
+    const modal = document.getElementById('interactiveModal');
+    document.getElementById('interactiveModalTitle').textContent = title;
+    document.getElementById('interactiveModalMessage').textContent = message;
+
+    const inputContainer = document.getElementById('interactiveModalInputContainer');
+    const input = document.getElementById('interactiveModalInput');
+    inputContainer.style.display = 'block';
+    input.value = defaultValue;
+
+    const confirmBtn = document.getElementById('interactiveModalConfirmBtn');
+    confirmBtn.onclick = () => {
+        closeModal('interactiveModal');
+        callback(input.value);
+    };
+
+    modal.style.display = 'block';
+    setTimeout(() => input.focus(), 100);
+}
+
 // --- DASHBOARD ---
 async function loadDashboardData() {
     try {
@@ -330,16 +389,16 @@ async function saveQuoteItems() {
         });
 
         if (response.ok) {
-            alert('Cotización actualizada correctamente');
+            showToast('Cotización actualizada correctamente');
             closeModal('quotationDetailsModal');
             loadQuotations(); // Refresh table
             loadDashboardData(); // Refresh stats
         } else {
-            alert('Error al actualizar cotización');
+            showToast('Error al actualizar cotización', 'error');
         }
     } catch (error) {
         console.error('Error saving quote items', error);
-        alert('Error de conexión');
+        showToast('Error de conexión', 'error');
     }
 }
 
@@ -349,29 +408,28 @@ function closeModal(modalId) {
 }
 
 async function editQuotationPrice(id, currentPrice) {
-    const newPrice = prompt("Ingrese el nuevo valor total de la venta:", currentPrice);
-    if (newPrice === null) return; // Cancelled
-
-    const priceValue = parseFloat(newPrice);
-    if (isNaN(priceValue) || priceValue < 0) {
-        alert("Por favor ingrese un valor numérico válido.");
-        return;
-    }
-
-    try {
-        const response = await fetchWithAuth(`${API_URL}/quotations/${id}/total?total=${priceValue}`, { method: 'PUT' });
-        if (response.ok) {
-            alert("Precio actualizado correctamente");
-            loadQuotations();
-            loadDashboardData(); // Refresh stats
-        } else {
-            const err = await response.json();
-            alert("Error al actualizar: " + err.detail);
+    showPrompt("Editar Precio", "Ingrese el nuevo valor total de la venta:", currentPrice, async (newPrice) => {
+        const priceValue = parseFloat(newPrice);
+        if (isNaN(priceValue) || priceValue < 0) {
+            showToast("Por favor ingrese un valor numérico válido.", 'warning');
+            return;
         }
-    } catch (error) {
-        console.error('Error updating price', error);
-        alert("Error de conexión");
-    }
+
+        try {
+            const response = await fetchWithAuth(`${API_URL}/quotations/${id}/total?total=${priceValue}`, { method: 'PUT' });
+            if (response.ok) {
+                showToast("Precio actualizado correctamente");
+                loadQuotations();
+                loadDashboardData(); // Refresh stats
+            } else {
+                const err = await response.json();
+                showToast("Error al actualizar: " + err.detail, 'error');
+            }
+        } catch (error) {
+            console.error('Error updating price', error);
+            showToast("Error de conexión", 'error');
+        }
+    });
 }
 
 // Window onclick to close modal
@@ -469,7 +527,7 @@ async function saveCategory() {
     const tags = document.getElementById('newCatTags').value.trim();
 
     if (!name) {
-        alert('El nombre es obligatorio');
+        showToast('El nombre es obligatorio', 'warning');
         return;
     }
 
@@ -481,17 +539,17 @@ async function saveCategory() {
         });
 
         if (response.ok) {
-            alert('Categoría creada');
+            showToast('Categoría creada');
             closeModal('categoryModal');
             document.getElementById('newCatName').value = '';
             document.getElementById('newCatTags').value = '';
             await loadCategories();
         } else {
-            alert('Error al crear categoría');
+            showToast('Error al crear categoría', 'error');
         }
     } catch (e) {
         console.error(e);
-        alert('Error de conexión');
+        showToast('Error de conexión', 'error');
     }
 }
 
@@ -553,7 +611,7 @@ async function saveProduct() {
     };
 
     if (!product.category) {
-        alert('Debe seleccionar una categoría');
+        showToast('Debe seleccionar una categoría', 'warning');
         return;
     }
 
@@ -573,6 +631,7 @@ async function saveProduct() {
         });
 
         if (response.ok) {
+            showToast(id ? 'Producto actualizado' : 'Producto creado');
             document.getElementById('productFormCard').style.display = 'none';
             loadProducts();
             // Clear form
@@ -580,9 +639,12 @@ async function saveProduct() {
             document.querySelectorAll('#productFormCard input, #productFormCard textarea, #productFormCard select').forEach(i => i.value = '');
             loadDashboardData(); // Update count
         } else {
-            alert('Error al guardar');
+            showToast('Error al guardar', 'error');
         }
-    } catch (e) { console.error(e); }
+    } catch (e) {
+        console.error(e);
+        showToast('Error de conexión', 'error');
+    }
 }
 
 async function editProduct(product) {
@@ -608,12 +670,17 @@ async function editProduct(product) {
 }
 
 async function deleteProduct(id) {
-    if (!confirm('¿Eliminar producto?')) return;
-    try {
-        await fetchWithAuth(`${API_URL}/products/${id}`, { method: 'DELETE' });
-        loadProducts();
-        loadDashboardData();
-    } catch (e) { console.error(e); }
+    showConfirm('Eliminar producto', '¿Está seguro de que desea eliminar este producto? Esta acción no se puede deshacer.', async () => {
+        try {
+            await fetchWithAuth(`${API_URL}/products/${id}`, { method: 'DELETE' });
+            showToast('Producto eliminado');
+            loadProducts();
+            loadDashboardData();
+        } catch (e) {
+            console.error(e);
+            showToast('Error al eliminar', 'error');
+        }
+    });
 }
 
 // Init

@@ -35,6 +35,24 @@
     </nav>
 
     <div class="main-content">
+        <div id="toast-container" class="toast-container"></div>
+
+        <div id="interactiveModal" class="modal">
+            <div class="modal-content" style="max-width: 400px;">
+                <h3 id="interactiveModalTitle">Título</h3>
+                <p id="interactiveModalMessage" style="margin: 15px 0; color: #666;"></p>
+                <div id="interactiveModalInputContainer" style="display: none; margin-bottom: 20px;">
+                    <input type="text" id="interactiveModalInput" style="width: 100%;" placeholder="Ingresa valor...">
+                </div>
+                <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                    <button class="btn-action btn-cancel" style="width: auto; padding: 10px 20px;"
+                        onclick="closeModal('interactiveModal')">Cancelar</button>
+                    <button class="btn-primary" id="interactiveModalConfirmBtn"
+                        style="width: auto; padding: 10px 20px;">Confirmar</button>
+                </div>
+            </div>
+        </div>
+
         <!-- Dashboard Overview -->
         <div id="dashboard" class="section-view active">
             <div class="section-header">

@@ -29,14 +29,14 @@ header {
     width: 100%;
     top: 0;
     z-index: 1000;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
 .top-bar {
-    background: rgba(0,0,0,0.2);
+    background: rgba(0, 0, 0, 0.2);
     padding: 8px 0;
     font-size: 0.85rem;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .top-bar .container {
@@ -84,8 +84,15 @@ nav {
 }
 
 @keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-10px); }
+
+    0%,
+    100% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
 }
 
 .logo-text h1 {
@@ -175,6 +182,7 @@ nav a:hover::after {
         opacity: 0;
         transform: translateX(-50px);
     }
+
     to {
         opacity: 1;
         transform: translateX(0);
@@ -231,12 +239,12 @@ nav a:hover::after {
 .btn-primary {
     background: var(--bright-blue);
     color: white;
-    box-shadow: 0 8px 20px rgba(0,136,204,0.3);
+    box-shadow: 0 8px 20px rgba(0, 136, 204, 0.3);
 }
 
 .btn-primary:hover {
     transform: translateY(-3px);
-    box-shadow: 0 12px 28px rgba(0,136,204,0.4);
+    box-shadow: 0 12px 28px rgba(0, 136, 204, 0.4);
 }
 
 .btn-secondary {
@@ -260,6 +268,7 @@ nav a:hover::after {
         opacity: 0;
         transform: translateX(50px);
     }
+
     to {
         opacity: 1;
         transform: translateX(0);
@@ -270,7 +279,7 @@ nav a:hover::after {
     background: white;
     border-radius: 30px;
     padding: 40px;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
     position: relative;
 }
 
@@ -324,7 +333,7 @@ nav a:hover::after {
     background: white;
     padding: 40px 30px;
     border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
     transition: all 0.3s;
     border: 2px solid transparent;
     position: relative;
@@ -349,7 +358,7 @@ nav a:hover::after {
 
 .service-card:hover {
     transform: translateY(-10px);
-    box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
 }
 
 .service-icon {
@@ -425,7 +434,7 @@ nav a:hover::after {
 .stat-card {
     text-align: center;
     padding: 25px;
-    background: rgba(255,255,255,0.1);
+    background: rgba(255, 255, 255, 0.1);
     border-radius: 15px;
     backdrop-filter: blur(10px);
 }
@@ -453,14 +462,14 @@ nav a:hover::after {
     align-items: center;
     gap: 15px;
     padding: 20px;
-    background: rgba(255,255,255,0.1);
+    background: rgba(255, 255, 255, 0.1);
     border-radius: 15px;
     backdrop-filter: blur(10px);
     transition: all 0.3s;
 }
 
 .feature-item:hover {
-    background: rgba(255,255,255,0.15);
+    background: rgba(255, 255, 255, 0.15);
     transform: translateX(10px);
 }
 
@@ -498,13 +507,13 @@ nav a:hover::after {
     background: white;
     border-radius: 20px;
     overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
     transition: all 0.3s;
 }
 
 .product-card:hover {
     transform: scale(1.05);
-    box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
 }
 
 .product-image {
@@ -561,7 +570,7 @@ nav a:hover::after {
 
 .testimonial-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
 }
 
 .quote-icon {
@@ -655,7 +664,7 @@ nav a:hover::after {
     padding: 20px;
     background: white;
     border-radius: 15px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
 }
 
 .contact-item-icon {
@@ -685,7 +694,7 @@ nav a:hover::after {
     background: white;
     padding: 40px;
     border-radius: 20px;
-    box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
 }
 
 .form-group {
@@ -714,7 +723,7 @@ nav a:hover::after {
 .form-group textarea:focus {
     outline: none;
     border-color: var(--bright-blue);
-    box-shadow: 0 0 0 3px rgba(0,136,204,0.1);
+    box-shadow: 0 0 0 3px rgba(0, 136, 204, 0.1);
 }
 
 .form-group textarea {
@@ -738,7 +747,7 @@ nav a:hover::after {
 .submit-btn:hover {
     background: #006fa3;
     transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(0,136,204,0.3);
+    box-shadow: 0 8px 20px rgba(0, 136, 204, 0.3);
 }
 
 /* Footer */
@@ -799,7 +808,7 @@ footer {
 .social-links a {
     width: 40px;
     height: 40px;
-    background: rgba(255,255,255,0.1);
+    background: rgba(255, 255, 255, 0.1);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -810,6 +819,166 @@ footer {
 }
 
 .social-links a:hover {
+    background: var(--accent-orange);
+    color: white;
+    transform: translateY(-3px);
+}
+
+/* WhatsApp Contact Card Styles */
+.whatsapp-contact-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    padding: 20px;
+}
+
+.whatsapp-card {
+    background: white;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 450px;
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    animation: fadeInUp 0.8s ease-out;
+}
+
+.whatsapp-card-header {
+    background: #075e54;
+    color: white;
+    padding: 25px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.whatsapp-logo-wrapper {
+    width: 60px;
+    height: 60px;
+    background: white;
+    border-radius: 50%;
+    overflow: hidden;
+    padding: 5px;
+    border: 2px solid #25d366;
+}
+
+.whatsapp-logo-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.whatsapp-header-info h3 {
+    margin: 0;
+    font-size: 1.2rem;
+}
+
+.whatsapp-status {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.85rem;
+    opacity: 0.9;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    background: #25d366;
+    border-radius: 50%;
+    box-shadow: 0 0 10px #25d366;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    50% {
+        transform: scale(1.5);
+        opacity: 0.5;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.whatsapp-card-body {
+    background: #e5ddd5;
+    /* WhatsApp background color */
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png');
+    background-repeat: repeat;
+}
+
+.chat-bubble {
+    background: white;
+    padding: 15px 20px;
+    border-radius: 0 15px 15px 15px;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    position: relative;
+    max-width: 85%;
+    align-self: flex-start;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.chat-bubble::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -10px;
+    width: 0;
+    height: 0;
+    border: 10px solid transparent;
+    border-top-color: white;
+    border-right-color: white;
+}
+
+.btn-whatsapp {
+    background: #25d366;
+    color: white;
+    padding: 15px 30px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: all 0.3s;
+    box-shadow: 0 5px 15px rgba(37, 211, 102, 0.4);
+    margin-top: 10px;
+}
+
+.btn-whatsapp:hover {
+    background: #128c7e;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(37, 211, 102, 0.5);
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.social-links a:hover {
     background: var(--bright-blue);
     transform: translateY(-3px);
 }
@@ -817,12 +986,13 @@ footer {
 .footer-bottom {
     text-align: center;
     padding-top: 30px;
-    border-top: 1px solid rgba(255,255,255,0.1);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
     opacity: 0.7;
 }
 
 /* Responsive */
 @media (max-width: 968px) {
+
     .hero-content,
     .about-content,
     .contact-content {

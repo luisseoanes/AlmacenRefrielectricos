@@ -8,6 +8,36 @@ const noResults = document.getElementById('noResults');
 
 let allProducts = [];
 
+// Helper for secure WhatsApp number
+const getWppNum = () => {
+    const p1 = "57", p2 = "304", p3 = "670", p4 = "2677";
+    return p1 + p2 + p3 + p4;
+};
+
+// UI Helpers
+function showToast(message, type = 'success') {
+    const container = document.getElementById('toast-container');
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+
+    let icon = 'info-circle';
+    if (type === 'success') icon = 'check-circle';
+    if (type === 'error') icon = 'exclamation-circle';
+    if (type === 'warning') icon = 'exclamation-triangle';
+
+    toast.innerHTML = `
+        <i class="fas fa-${icon}"></i>
+        <div class="toast-content">${message}</div>
+    `;
+
+    container.appendChild(toast);
+
+    setTimeout(() => {
+        toast.style.animation = 'fadeOut 0.5s ease-in forwards';
+        setTimeout(() => toast.remove(), 500);
+    }, 4000);
+}
+
 async function loadProducts() {
     try {
         const response = await fetch(`${API_URL}/products/`);
@@ -68,7 +98,7 @@ function filterCards() {
 
 function quoteWhatsapp(productName) {
     const message = `Hola, estoy interesado en cotizar: ${productName}`;
-    window.open(`https://wa.me/573046702677?text=${encodeURIComponent(message)}`, '_blank');
+    window.open(`https://wa.me/${getWppNum()}?text=${encodeURIComponent(message)}`, '_blank');
 }
 
 [searchInput, categorySelect, brandSelect].forEach(element => {
@@ -194,7 +224,7 @@ function updateCartUI() {
 
 async function sendBatchQuote() {
     if (cart.length === 0) {
-        alert('Agrega productos al carrito primero.');
+        showToast('Agrega productos al carrito primero.', 'warning');
         return;
     }
 
@@ -202,7 +232,7 @@ async function sendBatchQuote() {
     const contact = document.getElementById('quoteContact').value.trim();
 
     if (!name || !contact) {
-        alert('Por favor completa tu nombre y contacto para realizar la cotización.');
+        showToast('Por favor completa tu nombre y contacto para realizar la cotización.', 'warning');
         return;
     }
 
@@ -276,7 +306,7 @@ async function sendBatchQuote() {
         message += `\nContacto: ${contact}`;
         message += "\nQuedo atento a su respuesta. Gracias.";
 
-        window.open(`https://wa.me/573046702677?text=${encodeURIComponent(message)}`, '_blank');
+        window.open(`https://wa.me/${getWppNum()}?text=${encodeURIComponent(message)}`, '_blank');
 
         // 3. Clear Cart
         cart = [];
@@ -284,11 +314,11 @@ async function sendBatchQuote() {
         document.getElementById('quoteName').value = '';
         document.getElementById('quoteContact').value = '';
         toggleCart();
-        alert('Cotización enviada exitosamente.');
+        showToast('Cotización enviada exitosamente.');
 
     } catch (error) {
         console.error('Error:', error);
-        alert('Hubo un error al procesar la cotización. Intenta nuevamente.');
+        showToast('Hubo un error al procesar la cotización. Intenta nuevamente.', 'error');
     } finally {
         btn.innerHTML = originalText;
         btn.disabled = false;
