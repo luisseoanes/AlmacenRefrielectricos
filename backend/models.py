@@ -40,6 +40,7 @@ class Quotation(Base):
     id = Column(Integer, primary_key=True, index=True)
     customer_name = Column(String)
     customer_contact = Column(String) # Phone or Email
+    reference = Column(String, index=True, nullable=True) # Unique reference for 1-click flow
     items = Column(JSON) # Store list of items as JSON: [{"product_id": 1, "quantity": 2, "option": "3/8"}, ...]
     total_estimated = Column(Float, nullable=True)
     status = Column(String, default="Pending") # Pending, Purchased, Cancelled

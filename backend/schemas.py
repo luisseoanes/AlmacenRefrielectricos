@@ -49,6 +49,7 @@ class QuotationCreate(BaseModel):
     customer_contact: str
     items: List[QuotationItem]
     total_estimated: float
+    reference: Optional[str] = None
 
 class Quotation(QuotationCreate):
     id: int

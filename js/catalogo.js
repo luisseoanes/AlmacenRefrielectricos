@@ -315,32 +315,30 @@ async function sendBatchQuote() {
         return;
     }
 
+    const btn = document.querySelector('.cart-footer .btn-whatsapp');
+    const originalText = btn.innerHTML;
+
+    // Generate a quick random reference (4 chars)
+    const ref = 'REF-' + Math.random().toString(36).substring(2, 6).toUpperCase();
+
     // Prepare payload for backend
     let totalEstimated = 0;
     const items = cart.map(item => {
         let price = 0;
-
-        // 1. Try to parse price from option string e.g. "3/8 ($8.500)"
         const priceMatch = item.option ? item.option.match(/\$\s*([\d.]+)/) : null;
         if (priceMatch) {
             price = parseFloat(priceMatch[1].replace(/\./g, ''));
         }
-
-        // 2. Fallback to base product price text (cleaning 'Desde $20.000')
         if (!price && item.price) {
             const basePriceMatch = item.price.match(/\$\s*([\d.]+)/);
             if (basePriceMatch) {
                 price = parseFloat(basePriceMatch[1].replace(/\./g, ''));
             }
         }
-
-        // 3. Last resort: Raw price from DB
         if (!price) {
             price = item.price_raw || 0;
         }
-
         totalEstimated += price;
-
         return {
             product_id: item.id,
             product_name: item.name,
@@ -354,68 +352,40 @@ async function sendBatchQuote() {
         customer_name: name,
         customer_contact: contact,
         items: items,
-        total_estimated: totalEstimated
+        total_estimated: totalEstimated,
+        reference: ref
     };
 
-    const btn = document.querySelector('.cart-footer .btn-whatsapp');
-    const originalText = btn.innerHTML;
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
+    // 1. SAVE IN BACKGROUND (no await)
+    // keepalive: true ensures the request finishes even if we redirect
+    fetch(`${API_URL}/quotations/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(quotationData),
+        keepalive: true
+    }).catch(err => console.error('Background save failed:', err));
+
+    // 2. IMMEDIATE REDIRECT (The 1-Click experience)
+    let message = `Hola, soy ${name}. Me gustaría cotizar estos productos (Ref: ${ref}):\n\n`;
+    cart.forEach((item, index) => {
+        message += `${index + 1}. ${item.name} (${item.option})\n`;
+    });
+    message += `\nContacto: ${contact}\nQuedo atento a su respuesta. Gracias.`;
+
+    const whatsappUrl = `https://api.whatsapp.com/send?phone=${getWppNum()}&text=${encodeURIComponent(message)}`;
+
+    // Visual feedback
+    btn.innerHTML = '<i class="fas fa-check"></i> Redirigiendo...';
     btn.disabled = true;
 
-    try {
-        // 1. Save to Backend
-        const response = await fetch(`${API_URL}/quotations/`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(quotationData)
-        });
+    // Clear UI but store reference for success toast if needed (optional)
+    cart = [];
+    updateCartUI();
+    document.getElementById('quoteName').value = '';
+    document.getElementById('quoteContact').value = '';
 
-        if (!response.ok) throw new Error('Error guardando cotización');
-
-        const result = await response.json();
-        console.log('Cotización guardada:', result);
-
-        // 2. Prepare WhatsApp message
-        let message = `Hola, soy ${name}. Me gustaría cotizar los siguientes productos (Cotización #${result.id}):\n\n`;
-        cart.forEach((item, index) => {
-            message += `${index + 1}. ${item.name} (${item.option})\n`;
-        });
-        message += `\nContacto: ${contact}`;
-        message += "\nQuedo atento a su respuesta. Gracias.";
-
-        const whatsappUrl = `https://api.whatsapp.com/send?phone=${getWppNum()}&text=${encodeURIComponent(message)}`;
-
-        // Clear Cart data early so it doesn't persist if redirect fails
-        cart = [];
-        updateCartUI();
-        document.getElementById('quoteName').value = '';
-        document.getElementById('quoteContact').value = '';
-
-        // 3. Final Step to bypass Safari popup blocker:
-        // Instead of window.open, we change the button to a final confirmation link
-        btn.innerHTML = '<i class="fab fa-whatsapp"></i> ¡Listo! Toca aquí para enviar';
-        btn.style.background = '#25d366'; // WhatsApp Green
-        btn.disabled = false;
-        btn.onclick = () => {
-            window.location.href = whatsappUrl;
-            toggleCart();
-            showToast('Cotización enviada exitosamente.');
-            // Reset button after redirection
-            setTimeout(() => {
-                btn.innerHTML = originalText;
-                btn.onclick = sendBatchQuote;
-                btn.style.background = '';
-            }, 3000);
-        };
-
-    } catch (error) {
-        console.error('Error:', error);
-        showToast('Hubo un error al procesar la cotización. Intenta nuevamente.', 'error');
-        btn.innerHTML = originalText;
-        btn.disabled = false;
-    }
+    // Redirect now
+    window.location.href = whatsappUrl;
 }
 
 // Modal "Add" Action
