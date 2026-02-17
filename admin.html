@@ -15,7 +15,17 @@
 
 <body>
 
-    <nav class="sidebar">
+    <header class="mobile-header">
+        <div class="logo-section-mobile">
+            <img src="images/Logo.jpeg" alt="Logo" style="width: 30px; height: 30px; object-fit: contain;">
+            <span>Refrielectrico</span>
+        </div>
+        <button id="sidebarToggle" class="btn-sidebar-toggle">
+            <i class="fas fa-bars"></i>
+        </button>
+    </header>
+
+    <nav class="sidebar" id="sidebar">
         <div class="logo-section">
             <img src="images/Logo.jpeg" alt="Logo" style="width: 50px; height: 50px; object-fit: contain;">
             <h2>Refrielectrico</h2>
@@ -309,7 +319,7 @@
                 <h2>Analíticas Detalladas</h2>
                 <button class="btn-primary" onclick="getAnalytics()"><i class="fas fa-sync-alt"></i> Actualizar</button>
             </div>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 20px;">
+            <div class="analytics-grid">
                 <div class="card">
                     <h3>Top 5 Productos Más Cotizados</h3>
                     <ul id="topProductsList" style="list-style: none; padding: 0;"></ul>

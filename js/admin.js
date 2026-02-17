@@ -28,13 +28,34 @@ function switchView(viewId) {
     document.getElementById(viewId).classList.add('active');
 
     document.querySelectorAll('.nav-links li').forEach(el => el.classList.remove('active'));
-    event.currentTarget.classList.add('active');
+
+    // Handle mobile sidebar auto-close
+    const sidebar = document.getElementById('sidebar');
+    if (window.innerWidth <= 768 && sidebar) {
+        sidebar.classList.remove('open');
+    }
+
+    if (window.event && window.event.currentTarget) {
+        window.event.currentTarget.classList.add('active');
+    }
 
     if (viewId === 'quotations') loadQuotations();
     if (viewId === 'sales') loadSales();
     if (viewId === 'products') loadProducts();
     if (viewId === 'dashboard') loadDashboardData();
 }
+
+// Sidebar toggle for mobile
+document.addEventListener('DOMContentLoaded', () => {
+    const toggleBtn = document.getElementById('sidebarToggle');
+    const sidebar = document.getElementById('sidebar');
+
+    if (toggleBtn) {
+        toggleBtn.addEventListener('click', () => {
+            if (sidebar) sidebar.classList.toggle('open');
+        });
+    }
+});
 
 // --- UI HELPERS ---
 function showToast(message, type = 'success') {
