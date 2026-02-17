@@ -148,7 +148,8 @@ function changePage(step) {
 
 function quoteWhatsapp(productName) {
     const message = `Hola, estoy interesado en cotizar: ${productName}`;
-    window.open(`https://wa.me/${getWppNum()}?text=${encodeURIComponent(message)}`, '_blank');
+    const url = `https://api.whatsapp.com/send?phone=${getWppNum()}&text=${encodeURIComponent(message)}`;
+    window.location.href = url;
 }
 
 [searchInput, categorySelect, brandSelect].forEach(element => {
@@ -376,7 +377,7 @@ async function sendBatchQuote() {
         const result = await response.json();
         console.log('Cotización guardada:', result);
 
-        // 2. Open WhatsApp
+        // 2. Prepare WhatsApp message
         let message = `Hola, soy ${name}. Me gustaría cotizar los siguientes productos (Cotización #${result.id}):\n\n`;
         cart.forEach((item, index) => {
             message += `${index + 1}. ${item.name} (${item.option})\n`;
@@ -384,20 +385,34 @@ async function sendBatchQuote() {
         message += `\nContacto: ${contact}`;
         message += "\nQuedo atento a su respuesta. Gracias.";
 
-        window.open(`https://wa.me/${getWppNum()}?text=${encodeURIComponent(message)}`, '_blank');
+        const whatsappUrl = `https://api.whatsapp.com/send?phone=${getWppNum()}&text=${encodeURIComponent(message)}`;
 
-        // 3. Clear Cart
+        // Clear Cart data early so it doesn't persist if redirect fails
         cart = [];
         updateCartUI();
         document.getElementById('quoteName').value = '';
         document.getElementById('quoteContact').value = '';
-        toggleCart();
-        showToast('Cotización enviada exitosamente.');
+
+        // 3. Final Step to bypass Safari popup blocker:
+        // Instead of window.open, we change the button to a final confirmation link
+        btn.innerHTML = '<i class="fab fa-whatsapp"></i> ¡Listo! Toca aquí para enviar';
+        btn.style.background = '#25d366'; // WhatsApp Green
+        btn.disabled = false;
+        btn.onclick = () => {
+            window.location.href = whatsappUrl;
+            toggleCart();
+            showToast('Cotización enviada exitosamente.');
+            // Reset button after redirection
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+                btn.onclick = sendBatchQuote;
+                btn.style.background = '';
+            }, 3000);
+        };
 
     } catch (error) {
         console.error('Error:', error);
         showToast('Hubo un error al procesar la cotización. Intenta nuevamente.', 'error');
-    } finally {
         btn.innerHTML = originalText;
         btn.disabled = false;
     }
