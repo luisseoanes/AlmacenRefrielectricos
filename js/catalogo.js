@@ -99,7 +99,7 @@ function renderProduct(product) {
 }
 
 let currentPage = 1;
-const productsPerPage = 9;
+const productsPerPage = 12;
 
 function filterCards() {
     const query = (searchInput.value || '').toLowerCase().trim();
@@ -241,20 +241,40 @@ function addToCart(product, option = null) {
     }
 }
 
+// Header Cart Dropdown Logic
+function showCartDropdown() {
+    if (cart.length > 0) {
+        document.getElementById('cartDropdown').classList.add('show');
+    }
+}
+
+function hideCartDropdown() {
+    document.getElementById('cartDropdown').classList.remove('show');
+}
+
 function removeFromCart(index) {
     cart.splice(index, 1);
     updateCartUI();
 }
 
 function updateCartUI() {
-    cartCountBadge.textContent = cart.length;
+    // Update all badges
+    if (cartCountBadge) cartCountBadge.textContent = cart.length;
+    const navBadge = document.getElementById('cartBadge');
+    if (navBadge) {
+        navBadge.textContent = cart.length;
+        navBadge.style.transform = 'scale(1.2)';
+        setTimeout(() => navBadge.style.transform = 'scale(1)', 300);
+    }
 
+    // Sidebar items
     if (cart.length === 0) {
         cartItemsContainer.innerHTML = `
                     <div class="cart-empty">
                         <i class="fas fa-shopping-basket" style="font-size: 40px; margin-bottom: 10px;"></i>
                         <p>Tu carrito está vacío</p>
                     </div>`;
+        document.getElementById('cartDropdownItems').innerHTML = '<p class="empty-msg">Tu carrito está vacío</p>';
         return;
     }
 
@@ -269,6 +289,15 @@ function updateCartUI() {
                     </button>
                 </div>
             `).join('');
+
+    // Dropdown items
+    const dropdownItemsContainer = document.getElementById('cartDropdownItems');
+    dropdownItemsContainer.innerHTML = cart.map((item) => `
+        <div class="dropdown-item">
+            <span>${item.name}</span>
+            <small>${item.option ? item.option.split(' ')[0] : ''}</small>
+        </div>
+    `).join('');
 }
 
 async function sendBatchQuote() {

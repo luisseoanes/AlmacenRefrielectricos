@@ -54,6 +54,23 @@
                 <li><a href="index.html">Inicio</a></li>
                 <li><a href="#lista" class="active">Catálogo</a></li>
                 <li><a href="index.html#contacto">Contacto</a></li>
+                <li class="nav-cart-container" onmouseenter="showCartDropdown()" onmouseleave="hideCartDropdown()">
+                    <a href="javascript:void(0)" onclick="toggleCart()" class="cart-nav-link"
+                        style="position: relative;">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-badge" id="cartBadge">0</span>
+                    </a>
+                    <div class="cart-dropdown" id="cartDropdown">
+                        <div class="cart-dropdown-header">Resumen de pedido</div>
+                        <div class="cart-dropdown-items" id="cartDropdownItems">
+                            <p class="empty-msg">Tu carrito está vacío</p>
+                        </div>
+                        <div class="cart-dropdown-footer">
+                            <button class="btn btn-primary btn-small w-100" onclick="toggleCart()"
+                                style="width: 100%;">Ver carrito completo</button>
+                        </div>
+                    </div>
+                </li>
             </ul>
         </nav>
     </header>

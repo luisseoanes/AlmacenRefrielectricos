@@ -145,6 +145,113 @@
             width: 100%;
         }
 
+        .nav-cart-container {
+            position: relative;
+            margin-left: 10px;
+        }
+
+        .cart-nav-link {
+            font-size: 1.2rem;
+            color: white;
+            transition: color 0.3s;
+        }
+
+        .cart-badge {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: var(--accent-orange);
+            color: white;
+            font-size: 0.7rem;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            border: 2px solid var(--navy);
+            transition: transform 0.3s;
+        }
+
+        .cart-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            width: 300px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            display: none;
+            flex-direction: column;
+            gap: 15px;
+            color: var(--text-dark);
+            margin-top: 15px;
+            animation: slideDown 0.3s ease-out;
+            z-index: 1001;
+        }
+
+        .cart-dropdown::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            right: 15px;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-bottom: 8px solid white;
+        }
+
+        .cart-dropdown.show {
+            display: flex;
+        }
+
+        .cart-dropdown-header {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 1.2rem;
+            color: var(--navy);
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        .cart-dropdown-items {
+            max-height: 250px;
+            overflow-y: auto;
+        }
+
+        .dropdown-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #f9f9f9;
+        }
+
+        .dropdown-item span {
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .dropdown-item small {
+            color: #777;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .w-100 {
+            width: 100%;
+        }
+
         main {
             padding-top: 140px;
         }
