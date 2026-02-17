@@ -42,11 +42,36 @@ async function loadProducts() {
     try {
         const response = await fetch(`${API_URL}/products/`);
         allProducts = await response.json();
+        populateFilters();
         filterCards();
     } catch (error) {
         console.error('Error loading products:', error);
         resultsCount.textContent = 'Error al cargar productos. Intenta más tarde.';
     }
+}
+
+function populateFilters() {
+    const categories = new Set();
+    const brands = new Set();
+
+    allProducts.forEach(p => {
+        if (p.category) categories.add(p.category);
+        if (p.brands) {
+            // Split brands by space or comma and trim
+            const bList = p.brands.split(/[ ,]+/).filter(Boolean);
+            bList.forEach(b => brands.add(b.trim()));
+        }
+    });
+
+    // Populate Categories
+    const sortedCats = Array.from(categories).sort();
+    categorySelect.innerHTML = '<option value="all">Todas</option>' +
+        sortedCats.map(c => `<option value="${c}">${c.charAt(0).toUpperCase() + c.slice(1)}</option>`).join('');
+
+    // Populate Brands
+    const sortedBrands = Array.from(brands).sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
+    brandSelect.innerHTML = '<option value="all">Todas</option>' +
+        sortedBrands.map(b => `<option value="${b.toLowerCase()}">${b}</option>`).join('');
 }
 
 function renderProduct(product) {
