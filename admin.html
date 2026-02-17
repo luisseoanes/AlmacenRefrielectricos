@@ -273,7 +273,22 @@
                     <input type="text" id="prodPriceText" placeholder="Texto Precio (ej: Desde $20.000)">
                 </div>
                 <div class="form-grid">
-                    <input type="text" id="prodImage" placeholder="URL Imagen">
+                    <div class="img-grid">
+                        <div class="img-inside-grid">
+                            <input type="text" id="prodImage" placeholder="URL Imagen (se llena automáticamente)" style="flex: 1;">
+                            <label for="prodImageFile" class="btn-primary">
+                                <i class="fas fa-upload"></i> Subir imagen
+                            </label>
+                            <input type="file" id="prodImageFile" accept="image/*" style="display: none;" 
+                                onchange="uploadImageToCloudinary(this)">
+                        </div>
+                        <div class="img-upload-status" id="imageUploadStatus">
+                            <i class="fas fa-spinner fa-spin"></i> Subiendo imagen...
+                        </div>
+                        <div id="imagePreviewContainer" style="display: none;">
+                            <img class="image-preview" id="imagePreview" src="" alt="Vista previa">
+                        </div>
+                    </div>
                     <input type="text" id="prodBrands" placeholder="Marcas (ej: LG, Samsung)">
                 </div>
                 <div class="form-grid">
