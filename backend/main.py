@@ -11,6 +11,28 @@ from . import models, schemas, database, auth
 # Create tables
 models.Base.metadata.create_all(bind=database.engine)
 
+# Manual Migration for existing databases (adds "reference" column if missing)
+def apply_migrations():
+    import sqlite3
+    try:
+        # Get path from SQLAlchemy engine
+        path = str(database.engine.url).replace("sqlite:///", "")
+        if not path or path == "sqlite://": path = "refrielectricos.db"
+        
+        conn = sqlite3.connect(path)
+        cursor = conn.cursor()
+        cursor.execute("PRAGMA table_info(quotations)")
+        columns = [col[1] for col in cursor.fetchall()]
+        if "reference" not in columns:
+            print("Migrating: Adding 'reference' column to quotations")
+            cursor.execute("ALTER TABLE quotations ADD COLUMN reference TEXT")
+            conn.commit()
+        conn.close()
+    except Exception as e:
+        print(f"Migration error: {e}")
+
+apply_migrations()
+
 # Auto-seed admin user if it doesn't exist
 def seed_admin():
     db = database.SessionLocal()
