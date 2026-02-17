@@ -11,6 +11,12 @@ class User(Base):
     hashed_password = Column(String)
     is_active = Column(Boolean, default=True)
 
+class Category(Base):
+    __tablename__ = "categories"
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, unique=True, index=True)
+    tags = Column(String) # Default tags for this category
+
 class Product(Base):
     __tablename__ = "products"
 

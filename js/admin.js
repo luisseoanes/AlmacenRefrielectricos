@@ -443,6 +443,67 @@ function renderSalesChart(history) {
     });
 }
 
+// --- CATEGORIES ---
+let allCategories = [];
+
+async function loadCategories() {
+    try {
+        const response = await fetch(`${API_URL}/categories/`);
+        allCategories = await response.json();
+
+        const select = document.getElementById('prodCategory');
+        // Keep "Seleccione" option
+        select.innerHTML = '<option value="">Seleccione Categoría</option>' +
+            allCategories.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
+    } catch (e) {
+        console.error('Error loading categories', e);
+    }
+}
+
+function openCategoryModal() {
+    document.getElementById('categoryModal').style.display = 'block';
+}
+
+async function saveCategory() {
+    const name = document.getElementById('newCatName').value.trim();
+    const tags = document.getElementById('newCatTags').value.trim();
+
+    if (!name) {
+        alert('El nombre es obligatorio');
+        return;
+    }
+
+    try {
+        const response = await fetchWithAuth(`${API_URL}/categories/`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, tags })
+        });
+
+        if (response.ok) {
+            alert('Categoría creada');
+            closeModal('categoryModal');
+            document.getElementById('newCatName').value = '';
+            document.getElementById('newCatTags').value = '';
+            await loadCategories();
+        } else {
+            alert('Error al crear categoría');
+        }
+    } catch (e) {
+        console.error(e);
+        alert('Error de conexión');
+    }
+}
+
+function onCategoryChange(catName) {
+    const category = allCategories.find(c => c.name === catName);
+    if (category && category.tags) {
+        const tagsInput = document.getElementById('prodTags');
+        // Only set if tags are empty or if user wants governance (overwriting for now)
+        tagsInput.value = category.tags;
+    }
+}
+
 // --- PRODUCTS ---
 async function loadProducts() {
     try {
@@ -458,7 +519,7 @@ async function loadProducts() {
                         <td>${p.price_text}</td>
                         <td>${p.category}</td>
                         <td>
-                            <button class="btn-action btn-edit" title="Editar" onclick='editProduct(${JSON.stringify(p)})'><i class="fas fa-edit"></i></button>
+                            <button class="btn-action btn-edit" title="Editar" onclick='editProduct(${JSON.stringify(p).replace(/'/g, "&#39;")})'><i class="fas fa-edit"></i></button>
                             <button class="btn-action btn-delete" title="Eliminar" onclick="deleteProduct(${p.id})"><i class="fas fa-trash"></i></button>
                         </td>
                     </tr>
@@ -468,7 +529,14 @@ async function loadProducts() {
 
 function toggleProductForm() {
     const form = document.getElementById('productFormCard');
-    form.style.display = form.style.display === 'none' ? 'block' : 'none';
+    const isShowing = form.style.display === 'block';
+
+    if (!isShowing) {
+        form.style.display = 'block';
+        loadCategories(); // Ensure categories are loaded when opening form
+    } else {
+        form.style.display = 'none';
+    }
 }
 
 async function saveProduct() {
@@ -483,6 +551,11 @@ async function saveProduct() {
         search_tags: document.getElementById('prodTags').value,
         options: document.getElementById('prodOptions').value
     };
+
+    if (!product.category) {
+        alert('Debe seleccionar una categoría');
+        return;
+    }
 
     try {
         let url = `${API_URL}/products/`;
@@ -500,11 +573,11 @@ async function saveProduct() {
         });
 
         if (response.ok) {
-            toggleProductForm();
+            document.getElementById('productFormCard').style.display = 'none';
             loadProducts();
             // Clear form
             document.getElementById('prodId').value = '';
-            document.querySelectorAll('#productFormCard input, #productFormCard textarea').forEach(i => i.value = '');
+            document.querySelectorAll('#productFormCard input, #productFormCard textarea, #productFormCard select').forEach(i => i.value = '');
             loadDashboardData(); // Update count
         } else {
             alert('Error al guardar');
@@ -512,10 +585,13 @@ async function saveProduct() {
     } catch (e) { console.error(e); }
 }
 
-function editProduct(product) {
+async function editProduct(product) {
     document.getElementById('prodId').value = product.id;
     document.getElementById('prodName').value = product.name;
+
+    await loadCategories(); // Load before setting value
     document.getElementById('prodCategory').value = product.category;
+
     document.getElementById('prodPrice').value = product.price;
     document.getElementById('prodPriceText').value = product.price_text;
     document.getElementById('prodImage').value = product.image_url;
@@ -542,3 +618,4 @@ async function deleteProduct(id) {
 
 // Init
 loadDashboardData();
+loadCategories();

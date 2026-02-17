@@ -25,6 +25,29 @@ def seed_admin():
 
 seed_admin()
 
+# Auto-seed initial categories
+def seed_categories():
+    db = database.SessionLocal()
+    try:
+        count = db.query(models.Category).count()
+        if count == 0:
+            initial = [
+                {"name": "aire", "tags": "aire acondicionado split ventana inverter"},
+                {"name": "refrigeracion", "tags": "refrigeracion nevera congelador compresor gas"},
+                {"name": "lavado", "tags": "lavadora secadora manguera valvula"},
+                {"name": "electricidad", "tags": "electricidad cable breacker toma corriente"},
+                {"name": "consumibles", "tags": "consumibles cinta soldadura fundente"}
+            ]
+            for cat in initial:
+                db_cat = models.Category(**cat)
+                db.add(db_cat)
+            db.commit()
+            print("Auto-seeded categories")
+    finally:
+        db.close()
+
+seed_categories()
+
 app = FastAPI()
 
 # CORS
@@ -69,6 +92,19 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
 @app.get("/users/me", response_model=schemas.UserCreate) # Only returning username for now
 async def read_users_me(current_user: models.User = Depends(auth.get_current_user)):
     return {"username": current_user.username, "password": ""} # Don't return password hash
+
+# Category Endpoints
+@app.get("/categories/", response_model=List[schemas.Category])
+def read_categories(db: Session = Depends(get_db)):
+    return db.query(models.Category).all()
+
+@app.post("/categories/", response_model=schemas.Category)
+def create_category(category: schemas.CategoryCreate, db: Session = Depends(get_db), current_user: models.User = Depends(auth.get_current_user)):
+    db_cat = models.Category(**category.dict())
+    db.add(db_cat)
+    db.commit()
+    db.refresh(db_cat)
+    return db_cat
 
 # Product Endpoints
 @app.get("/products/", response_model=List[schemas.Product])

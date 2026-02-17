@@ -226,7 +226,13 @@
                 <div class="form-grid">
                     <input type="hidden" id="prodId">
                     <input type="text" id="prodName" placeholder="Nombre del producto">
-                    <input type="text" id="prodCategory" placeholder="Categoría (ej: aire, lavado)">
+                    <div style="display: flex; gap: 5px;">
+                        <select id="prodCategory" style="flex: 1;" onchange="onCategoryChange(this.value)">
+                            <option value="">Seleccione Categoría</option>
+                        </select>
+                        <button class="btn-primary" style="width: auto; padding: 0 10px;" onclick="openCategoryModal()"
+                            title="Nueva Categoría">+</button>
+                    </div>
                 </div>
                 <div class="form-grid">
                     <input type="number" id="prodPrice" placeholder="Precio (numérico)">
@@ -243,6 +249,20 @@
                 <button class="btn-primary" onclick="saveProduct()">Guardar Producto</button>
                 <button class="btn-action btn-cancel" style="width: auto; padding: 10px;"
                     onclick="toggleProductForm()">Cancelar</button>
+            </div>
+
+            <!-- New Category Modal -->
+            <div id="categoryModal" class="modal">
+                <div class="modal-content" style="max-width: 400px;">
+                    <span class="close" onclick="closeModal('categoryModal')">&times;</span>
+                    <h3>Nueva Categoría</h3>
+                    <div class="form-grid" style="grid-template-columns: 1fr; gap: 10px; margin-top: 15px;">
+                        <input type="text" id="newCatName" placeholder="Nombre de la categoría (ej: aire)">
+                        <textarea id="newCatTags" placeholder="Tags por defecto (separados por espacio)"
+                            rows="3"></textarea>
+                        <button class="btn-primary" onclick="saveCategory()">Crear Categoría</button>
+                    </div>
+                </div>
             </div>
 
             <div class="card">
