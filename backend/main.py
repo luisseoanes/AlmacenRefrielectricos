@@ -29,7 +29,9 @@ app = FastAPI()
 
 # CORS
 origins = [
-    "*", # Allow all origins for development (fixes issues with local file opening)
+    "*", # Allow all for development
+    "https://almacen-refrielectricos.vercel.app",
+    "https://almacen-refrielectricos.vercel.app/catalogo.html"
 ]
 
 app.add_middleware(
