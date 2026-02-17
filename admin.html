@@ -162,8 +162,39 @@
         <div id="sales" class="section-view">
             <div class="section-header">
                 <h2>Historial de Ventas</h2>
-                <button class="btn-primary" onclick="loadSales()"><i class="fas fa-sync-alt"></i> Refrescar</button>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <div class="stat-badge bg-green"
+                        style="padding: 5px 15px; border-radius: 20px; color: white; font-weight: bold;">
+                        Total: <span id="salesFilteredTotal">$0</span>
+                    </div>
+                    <button class="btn-primary" onclick="loadSales()"><i class="fas fa-sync-alt"></i> Refrescar</button>
+                </div>
             </div>
+
+            <div class="card" style="margin-bottom: 20px;">
+                <div class="form-grid"
+                    style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; align-items: flex-end;">
+                    <div class="form-group">
+                        <label style="display: block; font-size: 0.8rem; color: #666; margin-bottom: 5px;">Buscar
+                            Cliente / Contacto</label>
+                        <input type="text" id="salesSearch" placeholder="Nombre o teléfono..."
+                            onkeyup="filterSalesTable()">
+                    </div>
+                    <div class="form-group">
+                        <label style="display: block; font-size: 0.8rem; color: #666; margin-bottom: 5px;">Fecha
+                            Inicio</label>
+                        <input type="date" id="salesDateStart" onchange="filterSalesTable()">
+                    </div>
+                    <div class="form-group">
+                        <label style="display: block; font-size: 0.8rem; color: #666; margin-bottom: 5px;">Fecha
+                            Fin</label>
+                        <input type="date" id="salesDateEnd" onchange="filterSalesTable()">
+                    </div>
+                    <button class="btn-action btn-cancel" style="width: auto; height: 40px;"
+                        onclick="clearSalesFilters()">Limpiar</button>
+                </div>
+            </div>
+
             <div class="card">
                 <div style="overflow-x: auto;">
                     <table id="salesTable">

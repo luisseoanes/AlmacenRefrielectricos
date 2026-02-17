@@ -1,4 +1,4 @@
-const API_URL = 'https://almacenrefrielectricos-production.up.railway.app';
+const API_URL = 'http://localhost:8000';
 
 // Check Auth
 const token = localStorage.getItem('token');
@@ -116,19 +116,64 @@ async function loadSales() {
         const quotations = await response.json();
         const sales = quotations.filter(q => q.status === 'Purchased');
 
-        const tbody = document.querySelector('#salesTable tbody');
-        tbody.innerHTML = sales.map(q => `
-                    <tr>
-                        <td>#${q.id}</td>
-                        <td>${q.customer_name}</td>
-                        <td>${q.customer_contact}</td>
-                        <td>${q.total_estimated.toLocaleString('es-CO', { style: 'currency', currency: 'COP' })}</td>
-                        <td>${new Date(q.created_at).toLocaleDateString()}</td>
-                        <td><span class="status-badge status-purchased">Completada</span></td>
-                    </tr>
-                `).join('');
+        // Store globally for filtering
+        window.allSales = sales;
+
+        renderSalesTable(sales);
     } catch (error) { console.error(error); }
 }
+
+function renderSalesTable(sales) {
+    const tbody = document.querySelector('#salesTable tbody');
+    tbody.innerHTML = sales.map(q => `
+                <tr>
+                    <td>#${q.id}</td>
+                    <td>${q.customer_name}</td>
+                    <td>${q.customer_contact}</td>
+                    <td>${(q.total_estimated || 0).toLocaleString('es-CO', { style: 'currency', currency: 'COP' })}</td>
+                    <td>${new Date(q.created_at).toLocaleDateString()}</td>
+                    <td><span class="status-badge status-purchased">Completada</span></td>
+                </tr>
+            `).join('');
+
+    // Update Total
+    const total = sales.reduce((sum, q) => sum + (q.total_estimated || 0), 0);
+    document.getElementById('salesFilteredTotal').textContent = total.toLocaleString('es-CO', { style: 'currency', currency: 'COP' });
+}
+
+function filterSalesTable() {
+    const query = document.getElementById('salesSearch').value.toLowerCase();
+    const startDate = document.getElementById('salesDateStart').value;
+    const endDate = document.getElementById('salesDateEnd').value;
+
+    const filtered = window.allSales.filter(q => {
+        const matchesSearch = q.customer_name.toLowerCase().includes(query) || q.customer_contact.toLowerCase().includes(query);
+
+        let matchesDates = true;
+        const saleDate = new Date(q.created_at).setHours(0, 0, 0, 0);
+
+        if (startDate) {
+            const start = new Date(startDate).setHours(0, 0, 0, 0);
+            if (saleDate < start) matchesDates = false;
+        }
+        if (endDate) {
+            const end = new Date(endDate).setHours(23, 59, 59, 999);
+            if (saleDate > end) matchesDates = false;
+        }
+
+        return matchesSearch && matchesDates;
+    });
+
+    renderSalesTable(filtered);
+}
+
+function clearSalesFilters() {
+    document.getElementById('salesSearch').value = '';
+    document.getElementById('salesDateStart').value = '';
+    document.getElementById('salesDateEnd').value = '';
+    renderSalesTable(window.allSales);
+}
+
 
 async function updateStatus(id, status) {
     if (!confirm(`¿Marcar cotización #${id} como ${status}?`)) return;
