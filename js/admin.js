@@ -3,7 +3,7 @@
 const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
     ? 'http://localhost:8000'
     : 'https://almacenrefrielectricos-production.up.railway.app';
-    
+
 // Check Auth
 const token = localStorage.getItem('token');
 if (!token) {
@@ -715,6 +715,39 @@ async function deleteProduct(id) {
 }
 
 
+
+async function changePassword() {
+    const newPass = document.getElementById('newPassword').value;
+    const confirmPass = document.getElementById('confirmPassword').value;
+
+    if (!newPass || newPass.length < 4) {
+        showToast('La contraseña debe tener al menos 4 caracteres', 'warning');
+        return;
+    }
+
+    if (newPass !== confirmPass) {
+        showToast('Las contraseñas no coinciden', 'error');
+        return;
+    }
+
+    try {
+        const response = await fetchWithAuth(`${API_URL}/admin/change-password`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username: 'admin', password: newPass })
+        });
+
+        if (response.ok) {
+            showToast('Contraseña actualizada correctamente. Por seguridad, inicia sesión nuevamente.');
+            setTimeout(() => logout(), 2000);
+        } else {
+            showToast('Error al actualizar contraseña', 'error');
+        }
+    } catch (e) {
+        console.error(e);
+        showToast('Error de conexión', 'error');
+    }
+}
 
 // Init
 loadDashboardData();

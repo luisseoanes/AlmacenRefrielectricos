@@ -1,7 +1,7 @@
 const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
     ? 'http://localhost:8000'
     : 'https://almacenrefrielectricos-production.up.railway.app';
-    
+
 const catalogGrid = document.getElementById('catalogGrid');
 const searchInput = document.getElementById('buscarProducto');
 const categorySelect = document.getElementById('filtroCategoria');
@@ -80,7 +80,7 @@ function populateFilters() {
 function renderProduct(product) {
     return `
     <article class="catalog-card" data-id="${product.id}" data-price="${product.price}">
-        <div class="catalog-image">
+        <div class="catalog-image" onclick="openLightbox('${product.image_url}')" style="cursor: zoom-in;">
             <img src="${product.image_url}" alt="${product.name}" onerror="this.src='images/placeholder.jpg'">
         </div>
         <div class="card-title">
@@ -98,13 +98,13 @@ function renderProduct(product) {
     `;
 }
 
+let currentPage = 1;
+const productsPerPage = 9;
+
 function filterCards() {
     const query = (searchInput.value || '').toLowerCase().trim();
     const category = categorySelect.value;
     const brand = brandSelect.value;
-    let visible = 0;
-
-    catalogGrid.innerHTML = '';
 
     const filtered = allProducts.filter(product => {
         const searchText = (product.name + ' ' + (product.code || '') + ' ' + product.search_tags).toLowerCase();
@@ -114,13 +114,36 @@ function filterCards() {
         return matchesQuery && matchesCategory && matchesBrand;
     });
 
-    filtered.forEach(product => {
+    // Pagination Logic
+    const totalProducts = filtered.length;
+    const totalPages = Math.ceil(totalProducts / productsPerPage) || 1;
+
+    if (currentPage > totalPages) currentPage = totalPages;
+    if (currentPage < 1) currentPage = 1;
+
+    const startIndex = (currentPage - 1) * productsPerPage;
+    const endIndex = startIndex + productsPerPage;
+    const paginatedProducts = filtered.slice(startIndex, endIndex);
+
+    catalogGrid.innerHTML = '';
+    paginatedProducts.forEach(product => {
         catalogGrid.innerHTML += renderProduct(product);
     });
 
-    visible = filtered.length;
-    resultsCount.textContent = `${visible} productos disponibles`;
-    noResults.style.display = visible === 0 ? 'block' : 'none';
+    resultsCount.textContent = `${totalProducts} productos disponibles`;
+    noResults.style.display = totalProducts === 0 ? 'block' : 'none';
+
+    // Update Pagination UI
+    document.getElementById('pageInfo').textContent = `Página ${currentPage} de ${totalPages}`;
+    document.getElementById('prevPage').disabled = currentPage === 1;
+    document.getElementById('nextPage').disabled = currentPage === totalPages;
+    document.getElementById('paginationControls').style.display = totalProducts > 0 ? 'flex' : 'none';
+}
+
+function changePage(step) {
+    currentPage += step;
+    filterCards();
+    document.getElementById('lista').scrollIntoView({ behavior: 'smooth' });
 }
 
 function quoteWhatsapp(productName) {
@@ -381,10 +404,21 @@ const modalActions = document.querySelector('.modal-actions');
 // Let's hide the individual "Cotizar" button in CSS or JS since user wants bulk quote
 // For now, let's just make the "Agregar" button work (listener added above)
 
+function openLightbox(url) {
+    const modal = document.getElementById('lightboxModal');
+    const img = document.getElementById('lightboxImg');
+    img.src = url;
+    modal.style.display = 'flex';
+}
+
+function closeLightbox() {
+    document.getElementById('lightboxModal').style.display = 'none';
+}
+
 document.addEventListener('keydown', event => {
     if (event.key === 'Escape') {
         if (modal.classList.contains('open')) closeModal();
-        // Close sidebar if open? 
         if (cartSidebar.classList.contains('open')) toggleCart();
+        closeLightbox();
     }
 });

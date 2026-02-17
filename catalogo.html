@@ -94,6 +94,14 @@
                 <div class="catalog-grid" id="catalogGrid">
                     <!-- Products will be loaded here dynamically -->
                 </div>
+                <div class="pagination" id="paginationControls"
+                    style="display: flex; justify-content: center; align-items: center; gap: 15px; margin-top: 30px;">
+                    <button class="btn btn-secondary btn-small" id="prevPage" onclick="changePage(-1)"><i
+                            class="fas fa-chevron-left"></i> Anterior</button>
+                    <span id="pageInfo" style="font-weight: 600; color: #444;">Página 1 de 1</span>
+                    <button class="btn btn-secondary btn-small" id="nextPage" onclick="changePage(1)">Siguiente <i
+                            class="fas fa-chevron-right"></i></button>
+                </div>
             </div>
         </section>
 
@@ -122,6 +130,13 @@
                 <button class="btn btn-primary btn-small" type="button" style="width: 100%;">Agregar al carrito</button>
             </div>
         </div>
+    </div>
+
+    <div class="modal" id="lightboxModal"
+        style="background-color: rgba(0,0,0,0.9); display: none; align-items: center; justify-content: center; z-index: 2000;">
+        <span class="modal-close" onclick="closeLightbox()"
+            style="color: white; top: 20px; right: 30px; font-size: 40px;">&times;</span>
+        <img id="lightboxImg" src="" style="max-width: 90%; max-height: 90%; object-fit: contain; border-radius: 8px;">
     </div>
 
     <div id="toast-container" class="toast-container"></div>

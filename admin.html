@@ -41,6 +41,7 @@
             <li onclick="getAnalytics() ; switchView('analytics')"><i class="fas fa-chart-line"></i>
                 <span>Analíticas</span>
             </li>
+            <li onclick="switchView('security')"><i class="fas fa-lock"></i> <span>Seguridad</span></li>
         </ul>
 
         <div class="logout-btn" onclick="logout()">
@@ -335,6 +336,26 @@
                         <canvas id="salesChart"></canvas>
                     </div>
                 </div>
+            </div>
+        </div>
+        <!-- Security View -->
+        <div id="security" class="section-view">
+            <div class="section-header">
+                <h2>Seguridad y Perfil</h2>
+            </div>
+            <div class="card" style="max-width: 500px;">
+                <h3>Cambiar Contraseña de Administrador</h3>
+                <p style="color: #666; margin-bottom: 20px; font-size: 0.9rem;">Actualiza tu clave de acceso al panel.
+                </p>
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label>Nueva Contraseña</label>
+                    <input type="password" id="newPassword" placeholder="Mínimo 6 caracteres">
+                </div>
+                <div class="form-group" style="margin-bottom: 20px;">
+                    <label>Confirmar Contraseña</label>
+                    <input type="password" id="confirmPassword" placeholder="Repite la contraseña">
+                </div>
+                <button class="btn-primary" onclick="changePassword()">Actualizar Contraseña</button>
             </div>
         </div>
     </div>

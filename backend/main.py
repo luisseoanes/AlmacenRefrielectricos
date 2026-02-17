@@ -261,3 +261,16 @@ def update_quotation_items(quotation_id: int, items: List[schemas.QuotationItem]
     
     db.commit()
     return {"ok": True, "new_total": new_total}
+
+
+@app.put("/admin/change-password")
+async def change_password(password_data: schemas.UserCreate, db: Session = Depends(get_db), current_user: models.User = Depends(auth.get_current_user)):
+    """
+    Cambiar la contraseña del usuario actual.
+    """
+    if not password_data.password:
+        raise HTTPException(status_code=400, detail="Contraseña no puede estar vacía")
+    
+    current_user.hashed_password = auth.get_password_hash(password_data.password)
+    db.commit()
+    return {"message": "Contraseña actualizada exitosamente"}
