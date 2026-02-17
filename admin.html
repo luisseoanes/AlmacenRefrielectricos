@@ -115,20 +115,46 @@
 
         <!-- Quotation Details Modal -->
         <div id="quotationDetailsModal" class="modal">
-            <div class="modal-content">
+            <div class="modal-content" style="max-width: 800px;">
                 <span class="close" onclick="closeModal('quotationDetailsModal')">&times;</span>
                 <h3>Detalles de Cotización #<span id="modalQuoteId"></span></h3>
-                <table id="modalItemsTable">
-                    <thead>
-                        <tr>
-                            <th>Producto</th>
-                            <th>Opción</th>
-                            <th>Cantidad</th>
-                            <th>Precio Unit.</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
+
+                <div id="editQuoteControls"
+                    style="display: none; margin-bottom: 15px; background: #f0f8ff; padding: 10px; border-radius: 5px;">
+                    <h4>Agregar Producto</h4>
+                    <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                        <input type="text" id="quoteProductSearch" placeholder="Buscar producto..."
+                            onkeyup="searchProductsForQuote(this.value)" style="flex: 1;">
+                        <div id="quoteProductSuggestions"
+                            style="position: absolute; background: white; border: 1px solid #ddd; max-height: 200px; overflow-y: auto; z-index: 1000; width: 60%; margin-top: 40px; display: none;">
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 10px; display: flex; justify-content: flex-end; gap: 10px;">
+                    <button id="btnEnableEdit" class="btn-primary" onclick="enableEditQuoteItems()">Modificar
+                        Productos</button>
+                    <button id="btnSaveEdit" class="btn-primary" style="display: none; background-color: #28a745;"
+                        onclick="saveQuoteItems()">Guardar Cambios</button>
+                    <button id="btnCancelEdit" class="btn-action btn-cancel"
+                        style="display: none; width: auto; padding: 10px 20px;"
+                        onclick="cancelEditQuoteItems()">Cancelar</button>
+                </div>
+
+                <div style="overflow-x: auto;">
+                    <table id="modalItemsTable">
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>Opción</th>
+                                <th>Cantidad</th>
+                                <th>Precio Unit.</th>
+                                <th class="edit-col" style="display: none;">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
             </div>
         </div>
 

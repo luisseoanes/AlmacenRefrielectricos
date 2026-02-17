@@ -167,3 +167,21 @@ def update_quotation_total(quotation_id: int, total: float, db: Session = Depend
     db_quotation.total_estimated = total
     db.commit()
     return {"ok": True}
+
+@app.put("/quotations/{quotation_id}/items")
+def update_quotation_items(quotation_id: int, items: List[schemas.QuotationItem], db: Session = Depends(get_db), current_user: models.User = Depends(auth.get_current_user)):
+    db_quotation = db.query(models.Quotation).filter(models.Quotation.id == quotation_id).first()
+    if db_quotation is None:
+        raise HTTPException(status_code=404, detail="Quotation not found")
+    
+    # Update items
+    # Convert Pydantic models to dicts for JSON storage
+    items_json = [item.dict() for item in items]
+    db_quotation.items = items_json
+    
+    # Recalculate total
+    new_total = sum(item.price * item.quantity for item in items)
+    db_quotation.total_estimated = new_total
+    
+    db.commit()
+    return {"ok": True, "new_total": new_total}

@@ -153,17 +153,151 @@ function viewQuotationItems(quotation) {
         items = typeof quotation.items === 'string' ? JSON.parse(quotation.items) : quotation.items;
     }
 
-    tbody.innerHTML = items.map(item => `
-                <tr>
-                    <td>${item.product_name}</td>
-                    <td>${item.option}</td>
-                    <td>${item.quantity}</td>
-                    <td>${(item.price || 0).toLocaleString('es-CO', { style: 'currency', currency: 'COP' })}</td>
-                </tr>
-            `).join('');
+    // Store current items for editing
+    window.currentQuoteItems = items;
+    window.originalQuoteItems = JSON.parse(JSON.stringify(items)); // Deep copy for cancel
+
+    renderEditItemsTable(items, false); // Render properly (read-only initially)
 
     document.getElementById('quotationDetailsModal').style.display = "block";
+
+    // Reset edit state
+    document.getElementById('editQuoteControls').style.display = 'none';
+    document.getElementById('btnEnableEdit').style.display = 'inline-block';
+    document.getElementById('btnSaveEdit').style.display = 'none';
+    document.getElementById('btnCancelEdit').style.display = 'none';
+    document.querySelectorAll('.edit-col').forEach(el => el.style.display = 'none');
 }
+
+function enableEditQuoteItems() {
+    document.getElementById('editQuoteControls').style.display = 'block';
+    document.getElementById('btnEnableEdit').style.display = 'none';
+    document.getElementById('btnSaveEdit').style.display = 'inline-block';
+    document.getElementById('btnCancelEdit').style.display = 'inline-block';
+
+    renderEditItemsTable(window.currentQuoteItems, true);
+}
+
+function cancelEditQuoteItems() {
+    // Revert items
+    window.currentQuoteItems = JSON.parse(JSON.stringify(window.originalQuoteItems));
+
+    document.getElementById('editQuoteControls').style.display = 'none';
+    document.getElementById('btnEnableEdit').style.display = 'inline-block';
+    document.getElementById('btnSaveEdit').style.display = 'none';
+    document.getElementById('btnCancelEdit').style.display = 'none';
+
+    renderEditItemsTable(window.currentQuoteItems, false);
+}
+
+function renderEditItemsTable(items, isEditable) {
+    const tbody = document.querySelector('#modalItemsTable tbody');
+    const headEditCol = document.querySelector('#modalItemsTable thead .edit-col');
+
+    if (isEditable) {
+        headEditCol.style.display = 'table-cell';
+    } else {
+        headEditCol.style.display = 'none';
+    }
+
+    tbody.innerHTML = items.map((item, index) => `
+        <tr>
+            <td>${item.product_name}</td>
+            <td>
+                ${isEditable ? `<input type="text" value="${item.option || ''}" onchange="updateQuoteItem(${index}, 'option', this.value)" style="width: 80px;">` : (item.option || '')}
+            </td>
+            <td>
+                ${isEditable ? `<input type="number" value="${item.quantity}" min="1" onchange="updateQuoteItem(${index}, 'quantity', this.value)" style="width: 60px;">` : item.quantity}
+            </td>
+            <td>${(item.price || 0).toLocaleString('es-CO', { style: 'currency', currency: 'COP' })}</td>
+            <td class="edit-col" style="display: ${isEditable ? 'table-cell' : 'none'};">
+                <button class="btn-action btn-delete" onclick="removeQuoteItem(${index})"><i class="fas fa-trash"></i></button>
+            </td>
+        </tr>
+    `).join('');
+}
+
+function updateQuoteItem(index, field, value) {
+    if (field === 'quantity') value = parseInt(value) || 1;
+    window.currentQuoteItems[index][field] = value;
+}
+
+function removeQuoteItem(index) {
+    window.currentQuoteItems.splice(index, 1);
+    renderEditItemsTable(window.currentQuoteItems, true);
+}
+
+let searchTimeout;
+async function searchProductsForQuote(query) {
+    if (!query) {
+        document.getElementById('quoteProductSuggestions').style.display = 'none';
+        return;
+    }
+
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(async () => {
+        try {
+            const response = await fetch(`${API_URL}/products/`);
+            const products = await response.json();
+
+            // Filter locally (could be backend search for optimization)
+            const filtered = products.filter(p =>
+                p.name.toLowerCase().includes(query.toLowerCase()) ||
+                (p.search_tags && p.search_tags.toLowerCase().includes(query.toLowerCase()))
+            ).slice(0, 10);
+
+            const suggestions = document.getElementById('quoteProductSuggestions');
+            suggestions.innerHTML = filtered.map(p => `
+                <div style="padding: 10px; cursor: pointer; border-bottom: 1px solid #eee;" onclick='selectProductForQuote(${JSON.stringify(p)})'>
+                    <strong>${p.name}</strong> - ${p.price_text}
+                </div>
+            `).join('');
+            suggestions.style.display = 'block';
+        } catch (e) { console.error(e); }
+    }, 300);
+}
+
+function selectProductForQuote(product) {
+    // Add to current items
+    const newItem = {
+        product_id: product.id,
+        product_name: product.name,
+        quantity: 1,
+        option: product.options ? product.options.split('|')[0] : '',
+        price: product.price
+    };
+
+    window.currentQuoteItems.push(newItem);
+    renderEditItemsTable(window.currentQuoteItems, true);
+
+    // Clear search
+    document.getElementById('quoteProductSearch').value = '';
+    document.getElementById('quoteProductSuggestions').style.display = 'none';
+}
+
+async function saveQuoteItems() {
+    const id = document.getElementById('modalQuoteId').textContent;
+    try {
+        const response = await fetchWithAuth(`${API_URL}/quotations/${id}/items`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(window.currentQuoteItems)
+        });
+
+        if (response.ok) {
+            alert('Cotización actualizada correctamente');
+            closeModal('quotationDetailsModal');
+            loadQuotations(); // Refresh table
+            loadDashboardData(); // Refresh stats
+        } else {
+            alert('Error al actualizar cotización');
+        }
+    } catch (error) {
+        console.error('Error saving quote items', error);
+        alert('Error de conexión');
+    }
+}
+
 
 function closeModal(modalId) {
     document.getElementById(modalId).style.display = "none";
