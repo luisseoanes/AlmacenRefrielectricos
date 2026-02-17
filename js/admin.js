@@ -4,6 +4,12 @@ const API_URL = window.location.hostname === 'localhost' || window.location.host
     ? 'http://localhost:8000'
     : 'https://almacenrefrielectricos-production.up.railway.app';
 
+// Configuracion para Cloudinary
+
+const CLOUDINARY_CLOUD_NAME = 'dxxicnipr';
+const CLOUDINARY_UPLOAD_PRESET = 'refrielectricos_unsigned';
+const CLOUDINARY_UPLOAD_URL = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`;
+
 // Check Auth
 const token = localStorage.getItem('token');
 if (!token) {
@@ -617,9 +623,77 @@ function toggleProductForm() {
 
     if (!isShowing) {
         form.style.display = 'block';
-        loadCategories(); // Ensure categories are loaded when opening form
+        loadCategories();
     } else {
         form.style.display = 'none';
+        // Limpiar preview de imagen
+        document.getElementById('imagePreviewContainer').style.display = 'none';
+        document.getElementById('imageUploadStatus').style.display = 'none';
+        document.getElementById('prodImageFile').value = '';
+    }
+}
+
+async function uploadImageToCloudinary(input) {
+    const file = input.files[0];
+    if (!file) return;
+
+    // Validaciones
+    const maxSizeMB = 5;
+    if (file.size > maxSizeMB * 1024 * 1024) {
+        showToast(`La imagen no puede superar ${maxSizeMB}MB`, 'warning');
+        input.value = '';
+        return;
+    }
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+    if (!allowedTypes.includes(file.type)) {
+        showToast('Solo se permiten imágenes JPG, PNG, WEBP o GIF', 'warning');
+        input.value = '';
+        return;
+    }
+
+    // Mostrar estado de carga
+    const statusEl = document.getElementById('imageUploadStatus');
+    const previewContainer = document.getElementById('imagePreviewContainer');
+    const imageInput = document.getElementById('prodImage');
+
+    statusEl.style.display = 'flex';
+    previewContainer.style.display = 'none';
+    imageInput.value = '';
+
+    try {
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+        formData.append('folder', 'productos');
+
+        const response = await fetch(CLOUDINARY_UPLOAD_URL, {
+            method: 'POST',
+            body: formData
+        });
+
+        if (!response.ok) {
+            const err = await response.json();
+            throw new Error(err.error?.message || 'Error al subir imagen');
+        }
+
+        const data = await response.json();
+        const imageUrl = data.secure_url;
+
+        // Rellenar el campo URL automáticamente
+        imageInput.value = imageUrl;
+
+        // Mostrar preview
+        document.getElementById('imagePreview').src = imageUrl;
+        previewContainer.style.display = 'block';
+        statusEl.style.display = 'none';
+
+        showToast('Imagen subida correctamente', 'success');
+
+    } catch (error) {
+        console.error('Error subiendo imagen:', error);
+        statusEl.style.display = 'none';
+        showToast('Error al subir imagen: ' + error.message, 'error');
+        input.value = '';
     }
 }
 
@@ -682,7 +756,7 @@ async function editProduct(product) {
     document.getElementById('prodCode').value = product.code || '';
     document.getElementById('prodName').value = product.name;
 
-    await loadCategories(); // Load before setting value
+    await loadCategories();
     document.getElementById('prodCategory').value = product.category;
 
     document.getElementById('prodPrice').value = product.price;
@@ -692,11 +766,20 @@ async function editProduct(product) {
     document.getElementById('prodTags').value = product.search_tags;
     document.getElementById('prodOptions').value = product.options;
 
-    // Show form
+    // Mostrar preview si ya tiene imagen
+    const previewContainer = document.getElementById('imagePreviewContainer');
+    const previewImg = document.getElementById('imagePreview');
+    if (product.image_url) {
+        previewImg.src = product.image_url;
+        previewContainer.style.display = 'block';
+    } else {
+        previewContainer.style.display = 'none';
+    }
+    document.getElementById('imageUploadStatus').style.display = 'none';
+    document.getElementById('prodImageFile').value = '';
+
     const form = document.getElementById('productFormCard');
     form.style.display = 'block';
-
-    // Scroll to form
     form.scrollIntoView({ behavior: 'smooth' });
 }
 
