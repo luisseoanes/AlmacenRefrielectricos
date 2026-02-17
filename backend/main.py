@@ -9,6 +9,22 @@ from . import models, schemas, database, auth
 # Create tables
 models.Base.metadata.create_all(bind=database.engine)
 
+# Auto-seed admin user if it doesn't exist
+def seed_admin():
+    db = database.SessionLocal()
+    try:
+        admin = db.query(models.User).filter(models.User.username == "admin").first()
+        if not admin:
+            hashed_pw = auth.get_password_hash("admin123")
+            admin_user = models.User(username="admin", hashed_password=hashed_pw)
+            db.add(admin_user)
+            db.commit()
+            print("Auto-seeded admin user")
+    finally:
+        db.close()
+
+seed_admin()
+
 app = FastAPI()
 
 # CORS
