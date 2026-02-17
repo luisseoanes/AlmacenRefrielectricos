@@ -258,3 +258,24 @@ def update_quotation_items(quotation_id: int, items: List[schemas.QuotationItem]
     
     db.commit()
     return {"ok": True, "new_total": new_total}
+# Admin Tools
+@app.post("/admin/reset-db")
+async def reset_database_endpoint(current_user: models.User = Depends(auth.get_current_user), db: Session = Depends(get_db)):
+    # Optional: Additional check to ensure it's really an admin if you had roles
+    try:
+        # Delete data from specific tables
+        db.query(models.Quotation).delete()
+        db.query(models.Product).delete()
+        db.query(models.Category).delete()
+        
+        # Reset counters in SQLite
+        try:
+            db.execute(database.text("DELETE FROM sqlite_sequence WHERE name IN ('products', 'categories', 'quotations')"))
+        except Exception as seq_e:
+            print(f"Notice: Could not reset sequences: {seq_e}")
+            
+        db.commit()
+        return {"message": "Base de datos reiniciada con éxito. Usuarios preservados."}
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=str(e))
