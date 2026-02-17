@@ -60,11 +60,10 @@ function renderProduct(product) {
             <h3>${product.name}</h3>
         </div>
         <p>Marcas: ${product.brands}</p>
-        <div class="price">${product.price_text}</div>
         <div class="card-actions">
             <button class="btn btn-secondary btn-small" onclick='openModal(${JSON.stringify(product)})'>Ver opciones</button>
             <button class="btn btn-primary btn-small" onclick='addToCart(${JSON.stringify(product)})'>
-                <i class="fas fa-plus"></i> Agregar
+                <i class="fas fa-plus"></i> Cotizar
             </button>
         </div>
     </article>
@@ -117,11 +116,10 @@ const closeButtons = document.querySelectorAll('[data-close]');
 
 function openModal(product) {
     const title = product.name;
-    const price = product.price_text;
     const options = (product.options || '').split('|').filter(Boolean);
 
     modalTitle.textContent = title;
-    modalPrice.textContent = price;
+    modalPrice.textContent = ''; // Hidden for end user
     modalOptions.innerHTML = options.length
         ? options.map((option, index) => `
                     <label class="modal-option">
