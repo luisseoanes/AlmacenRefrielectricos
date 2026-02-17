@@ -1,0 +1,11 @@
+# Entorno virtual
+venv/
+env/
+.env
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDEs
+.vscode/

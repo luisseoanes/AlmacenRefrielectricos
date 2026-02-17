@@ -1,3 +1,7 @@
+const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? 'http://localhost:8000'
+    : 'https://almacenrefrielectricos-production.up.railway.app';
+
 async function login() {
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
@@ -8,7 +12,7 @@ async function login() {
     formData.append('password', password);
 
     try {
-        const response = await fetch('https://almacenrefrielectricos-production.up.railway.app/token', {
+        const response = await fetch(`${API_URL}/token`, {
             method: 'POST',
             body: formData
         });
