@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Allow: /catalogo.html
+Disallow: /admin.html
+Disallow: /login.html
+Disallow: /js/
+Disallow: /css/
+
+Sitemap: https://almacenrefrielectricos.com/sitemap.xml
