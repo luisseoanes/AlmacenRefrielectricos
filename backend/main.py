@@ -239,9 +239,13 @@ def update_quotation_total(quotation_id: int, total: float, db: Session = Depend
     if db_quotation is None:
         raise HTTPException(status_code=404, detail="Quotation not found")
     
-    # Allow updating total only if status is Pending (or verify with user logic, but requested 'before confirming sale')
+    # Allow updating total only if status is Pending
     if db_quotation.status != "Pending":
          raise HTTPException(status_code=400, detail="Cannot update total for confirmed or cancelled quotations")
+
+    db_quotation.total_estimated = total
+    db.commit()
+    return {"ok": True, "new_total": total}
 
 
 import shutil
