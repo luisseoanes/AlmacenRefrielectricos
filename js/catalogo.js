@@ -89,6 +89,11 @@ function renderProduct(product) {
         </div>
         <p>Marcas: ${product.brands}</p>
         <div class="card-actions">
+            <div class="qty-select-wrapper" style="display: flex; align-items: center; border: 1px solid #ddd; border-radius: 4px; overflow: hidden; height: 36px; margin-bottom: 5px;">
+                <button onclick="event.stopPropagation(); changeCardQty(${product.id}, -1)" style="padding: 0 10px; border: none; background: #f9f9f9; cursor: pointer;">-</button>
+                <input type="number" id="qty-${product.id}" value="1" min="1" readonly style="width: 35px; border: none; text-align: center; font-size: 0.9rem; -moz-appearance: textfield;">
+                <button onclick="event.stopPropagation(); changeCardQty(${product.id}, 1)" style="padding: 0 10px; border: none; background: #f9f9f9; cursor: pointer;">+</button>
+            </div>
             <button class="btn btn-secondary btn-small" onclick='openModal(${JSON.stringify(product)})'>Ver opciones</button>
             <button class="btn btn-primary btn-small" onclick='addToCart(${JSON.stringify(product)})'>
                 <i class="fas fa-plus"></i> Cotizar
@@ -96,6 +101,24 @@ function renderProduct(product) {
         </div>
     </article>
     `;
+}
+
+function changeCardQty(id, delta) {
+    const input = document.getElementById(`qty-${id}`);
+    if (input) {
+        let val = parseInt(input.value) + delta;
+        if (val < 1) val = 1;
+        input.value = val;
+    }
+}
+
+function changeModalQty(delta) {
+    const input = document.getElementById('modalQty');
+    if (input) {
+        let val = parseInt(input.value) + delta;
+        if (val < 1) val = 1;
+        input.value = val;
+    }
 }
 
 let currentPage = 1;
@@ -181,6 +204,10 @@ function openModal(product) {
                 `).join('')
         : '<p class="modal-option">Consulta disponibilidad específica.</p>';
 
+    // Reset quantity to 1
+    const qtyInput = document.getElementById('modalQty');
+    if (qtyInput) qtyInput.value = 1;
+
     // Store current product in modal for "Add to Quote" action
     modal.dataset.productId = product.id;
     modal.dataset.productName = product.name;
@@ -216,19 +243,32 @@ function toggleCart() {
     cartSidebar.classList.toggle('open');
 }
 
-function addToCart(product, option = null) {
-    const item = {
-        id: product.id,
-        name: product.name,
-        price: product.price_text,
-        price_raw: product.price, // Store raw DB price as fallback
-        option: option || 'Estándar' // Can be e.g. "R134A ($22.000)"
-    };
-    cart.push(item);
+function addToCart(product, option = null, overrideQty = null) {
+    const qtyInput = document.getElementById(`qty-${product.id}`);
+    const quantity = overrideQty || (qtyInput ? parseInt(qtyInput.value) : 1);
+    const selectedOption = option || 'Estándar';
+
+    // Check if item exists in cart with same option
+    const existingIndex = cart.findIndex(item => item.id === product.id && item.option === selectedOption);
+
+    if (existingIndex !== -1) {
+        cart[existingIndex].quantity += quantity;
+    } else {
+        const item = {
+            id: product.id,
+            name: product.name,
+            price: product.price_text,
+            price_raw: product.price, // Store raw DB price as fallback
+            option: selectedOption,
+            quantity: quantity
+        };
+        cart.push(item);
+    }
+
     updateCartUI();
 
     // Visual feedback
-    const btn = event.target.closest('button'); // Ensure we target the button even if icon clicked
+    const btn = event?.target?.closest('button');
     if (btn) {
         const originalText = btn.innerHTML;
         btn.innerHTML = '<i class="fas fa-check"></i> Agregado';
@@ -236,6 +276,9 @@ function addToCart(product, option = null) {
             btn.innerHTML = originalText;
         }, 1000);
     }
+
+    // Reset card qty if added from card
+    if (qtyInput) qtyInput.value = 1;
 
     if (!cartSidebar.classList.contains('open')) {
         // Optional: bounce the cart icon
@@ -258,12 +301,22 @@ function removeFromCart(index) {
     updateCartUI();
 }
 
+function changeCartQty(index, delta) {
+    cart[index].quantity += delta;
+    if (cart[index].quantity < 1) {
+        removeFromCart(index);
+    } else {
+        updateCartUI();
+    }
+}
+
 function updateCartUI() {
     // Update all badges
-    if (cartCountBadge) cartCountBadge.textContent = cart.length;
+    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+    if (cartCountBadge) cartCountBadge.textContent = totalItems;
     const navBadge = document.getElementById('cartBadge');
     if (navBadge) {
-        navBadge.textContent = cart.length;
+        navBadge.textContent = totalItems;
         navBadge.style.transform = 'scale(1.2)';
         setTimeout(() => navBadge.style.transform = 'scale(1)', 300);
     }
@@ -284,6 +337,11 @@ function updateCartUI() {
                     <div class="cart-item-info">
                         <h4>${item.name}</h4>
                         <p>${item.option}</p>
+                        <div class="cart-item-qty" style="display: flex; align-items: center; gap: 10px; margin-top: 5px;">
+                            <button onclick="changeCartQty(${index}, -1)" style="width: 20px; height: 20px; border-radius: 50%; border: 1px solid #ddd; background: white; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.8rem;">-</button>
+                            <span style="font-weight: 600; font-size: 0.9rem;">${item.quantity}</span>
+                            <button onclick="changeCartQty(${index}, 1)" style="width: 20px; height: 20px; border-radius: 50%; border: 1px solid #ddd; background: white; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.8rem;">+</button>
+                        </div>
                     </div>
                     <button class="cart-remove" onclick="removeFromCart(${index})">
                         <i class="fas fa-trash"></i>
@@ -295,7 +353,7 @@ function updateCartUI() {
     const dropdownItemsContainer = document.getElementById('cartDropdownItems');
     dropdownItemsContainer.innerHTML = cart.map((item) => `
         <div class="dropdown-item">
-            <span>${item.name}</span>
+            <span>${item.name} x${item.quantity}</span>
             <small>${item.option ? item.option.split(' ')[0] : ''}</small>
         </div>
     `).join('');
@@ -338,11 +396,11 @@ async function sendBatchQuote() {
         if (!price) {
             price = item.price_raw || 0;
         }
-        totalEstimated += price;
+        totalEstimated += (price * item.quantity);
         return {
             product_id: item.id,
             product_name: item.name,
-            quantity: 1,
+            quantity: item.quantity,
             option: item.option,
             price: price
         };
@@ -368,7 +426,8 @@ async function sendBatchQuote() {
     // 2. IMMEDIATE REDIRECT (The 1-Click experience)
     let message = `Hola, soy ${name}. Me gustaría cotizar estos productos (Ref: ${ref}):\n\n`;
     cart.forEach((item, index) => {
-        message += `${index + 1}. ${item.name} (${item.option})\n`;
+        const qtyText = item.quantity > 1 ? ` (Cant: ${item.quantity})` : '';
+        message += `${index + 1}. ${item.name} - ${item.option}${qtyText}\n`;
     });
     message += `\nContacto: ${contact}\nQuedo atento a su respuesta. Gracias.`;
 
@@ -394,14 +453,13 @@ document.querySelector('#productoModal .btn-primary').addEventListener('click', 
     const selectedOption = document.querySelector('input[name="opcion"]:checked')?.value;
     const productId = modal.dataset.productId;
     const productName = modal.dataset.productName;
+    const quantity = parseInt(document.getElementById('modalQty').value) || 1;
 
-    // Find product object (inefficient but works for small catalog)
-    // Ideally we pass the full object to openModal and store it
-    // Rescuing price from existing loaded products would be safer
+    // Find product object
     const product = allProducts.find(p => p.id == productId);
 
     if (product) {
-        addToCart(product, selectedOption);
+        addToCart(product, selectedOption, quantity);
         closeModal();
         toggleCart(); // Open cart to show addition
     }

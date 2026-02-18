@@ -144,6 +144,15 @@
             <p class="modal-price" id="modalPrice"></p>
             <div class="modal-options" id="modalOptions"></div>
             <div class="modal-actions">
+                <div class="quantity-selector"
+                    style="margin-bottom: 15px; display: flex; align-items: center; gap: 10px; justify-content: center;">
+                    <button class="btn-qty" onclick="changeModalQty(-1)"
+                        style="width: 30px; height: 30px; border-radius: 50%; border: 1px solid #ddd; background: white; cursor: pointer;">-</button>
+                    <input type="number" id="modalQty" value="1" min="1"
+                        style="width: 50px; text-align: center; border: 1px solid #ddd; border-radius: 4px; padding: 5px;">
+                    <button class="btn-qty" onclick="changeModalQty(1)"
+                        style="width: 30px; height: 30px; border-radius: 50%; border: 1px solid #ddd; background: white; cursor: pointer;">+</button>
+                </div>
                 <button class="btn btn-primary btn-small" type="button" style="width: 100%;">Agregar al carrito</button>
             </div>
         </div>

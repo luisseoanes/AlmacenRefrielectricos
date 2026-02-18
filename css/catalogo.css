@@ -641,6 +641,30 @@
             border-radius: 10px;
         }
 
+        .btn-qty {
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: var(--navy);
+        }
+
+        .btn-qty:hover {
+            background: var(--navy) !important;
+            color: white !important;
+            border-color: var(--navy) !important;
+        }
+
+        .qty-select-wrapper button:hover {
+            background: #eee !important;
+        }
+
+        .cart-item-qty button:hover {
+            background: var(--navy) !important;
+            color: white !important;
+        }
+
         /* CTA Section */
         .cta {
             padding: 80px 20px;
