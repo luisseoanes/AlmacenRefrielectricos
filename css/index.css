@@ -293,6 +293,14 @@ nav a:hover::after {
     margin-bottom: 20px;
 }
 
+.hero-logo {
+    width: 200px;
+    height: 200px;
+    object-fit: contain;
+    margin-bottom: 20px;
+    filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.1));
+}
+
 /* Services Section */
 .services {
     padding: 100px 20px;
@@ -545,6 +553,42 @@ nav a:hover::after {
     color: #666;
     font-size: 0.95rem;
     line-height: 1.6;
+}
+
+.brands-banner {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 50px;
+    margin-top: 40px;
+    padding: 30px;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+}
+
+.brand-item {
+    transition: all 0.3s;
+    user-select: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.brand-item img {
+    max-height: 40px;
+    width: auto;
+    max-width: 140px;
+    filter: grayscale(100%);
+    opacity: 0.6;
+    transition: all 0.3s;
+}
+
+.brand-item:hover img {
+    filter: grayscale(0%);
+    opacity: 1;
+    transform: scale(1.1);
 }
 
 /* Testimonials Section */
