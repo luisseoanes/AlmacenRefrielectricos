@@ -483,6 +483,11 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            transition: transform 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        .catalog-image:hover img {
+            transform: scale(1.15);
         }
 
         .price {
