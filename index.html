@@ -410,6 +410,19 @@
         </div>
     </footer>
 
+    <!-- Image Lightbox -->
+    <div class="image-lightbox" id="imageLightbox" aria-hidden="true">
+        <button class="lightbox-close" type="button" aria-label="Cerrar">&times;</button>
+        <div class="lightbox-toolbar" role="toolbar" aria-label="Controles de zoom">
+            <button class="lightbox-btn" type="button" data-zoom="out" aria-label="Alejar">-</button>
+            <button class="lightbox-btn" type="button" data-zoom="reset" aria-label="Restablecer">1:1</button>
+            <button class="lightbox-btn" type="button" data-zoom="in" aria-label="Acercar">+</button>
+        </div>
+        <div class="lightbox-stage" id="lightboxStage">
+            <img id="lightboxImage" src="" alt="">
+        </div>
+    </div>
+
     <script src="js/index.js">    </script>
 </body>
 

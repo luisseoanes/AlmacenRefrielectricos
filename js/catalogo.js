@@ -476,15 +476,113 @@ const modalActions = document.querySelector('.modal-actions');
 // Let's hide the individual "Cotizar" button in CSS or JS since user wants bulk quote
 // For now, let's just make the "Agregar" button work (listener added above)
 
+const lightboxModal = document.getElementById('lightboxModal');
+const lightboxStage = document.getElementById('lightboxStage');
+const lightboxImg = document.getElementById('lightboxImg');
+const lightboxButtons = document.querySelectorAll('#lightboxModal .lightbox-btn');
+
+let lightboxScale = 1;
+let lightboxTranslateX = 0;
+let lightboxTranslateY = 0;
+let isLightboxDragging = false;
+let lightboxDragStartX = 0;
+let lightboxDragStartY = 0;
+
+const LIGHTBOX_MIN_SCALE = 1;
+const LIGHTBOX_MAX_SCALE = 4;
+const LIGHTBOX_ZOOM_STEP = 0.2;
+
+function updateLightboxTransform() {
+    lightboxImg.style.transform = `translate(${lightboxTranslateX}px, ${lightboxTranslateY}px) scale(${lightboxScale})`;
+    if (lightboxStage) {
+        lightboxStage.classList.toggle('is-zoomed', lightboxScale > 1);
+    }
+}
+
+function resetLightboxTransform() {
+    lightboxScale = 1;
+    lightboxTranslateX = 0;
+    lightboxTranslateY = 0;
+    updateLightboxTransform();
+}
+
 function openLightbox(url) {
-    const modal = document.getElementById('lightboxModal');
-    const img = document.getElementById('lightboxImg');
-    img.src = url;
-    modal.style.display = 'flex';
+    if (!lightboxModal || !lightboxImg) return;
+    lightboxImg.src = url;
+    lightboxImg.alt = 'Imagen ampliada';
+    resetLightboxTransform();
+    lightboxModal.classList.add('open');
+    lightboxModal.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('no-scroll');
 }
 
 function closeLightbox() {
-    document.getElementById('lightboxModal').style.display = 'none';
+    if (!lightboxModal) return;
+    lightboxModal.classList.remove('open');
+    lightboxModal.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('no-scroll');
+    if (lightboxImg) lightboxImg.src = '';
+}
+
+function zoomLightbox(delta) {
+    const nextScale = Math.min(LIGHTBOX_MAX_SCALE, Math.max(LIGHTBOX_MIN_SCALE, lightboxScale + delta));
+    if (nextScale === LIGHTBOX_MIN_SCALE) {
+        lightboxTranslateX = 0;
+        lightboxTranslateY = 0;
+    }
+    lightboxScale = nextScale;
+    updateLightboxTransform();
+}
+
+if (lightboxStage) {
+    lightboxStage.addEventListener('wheel', (event) => {
+        if (!lightboxModal.classList.contains('open')) return;
+        event.preventDefault();
+        const direction = event.deltaY < 0 ? 1 : -1;
+        zoomLightbox(direction * LIGHTBOX_ZOOM_STEP);
+    }, { passive: false });
+
+    lightboxStage.addEventListener('pointerdown', (event) => {
+        if (lightboxScale <= 1) return;
+        isLightboxDragging = true;
+        lightboxDragStartX = event.clientX - lightboxTranslateX;
+        lightboxDragStartY = event.clientY - lightboxTranslateY;
+        lightboxStage.setPointerCapture(event.pointerId);
+    });
+
+    lightboxStage.addEventListener('pointermove', (event) => {
+        if (!isLightboxDragging) return;
+        lightboxTranslateX = event.clientX - lightboxDragStartX;
+        lightboxTranslateY = event.clientY - lightboxDragStartY;
+        updateLightboxTransform();
+    });
+
+    lightboxStage.addEventListener('pointerup', () => {
+        isLightboxDragging = false;
+    });
+
+    lightboxStage.addEventListener('pointercancel', () => {
+        isLightboxDragging = false;
+    });
+}
+
+if (lightboxButtons && lightboxButtons.length) {
+    lightboxButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const action = button.dataset.zoom;
+            if (action === 'in') zoomLightbox(LIGHTBOX_ZOOM_STEP);
+            if (action === 'out') zoomLightbox(-LIGHTBOX_ZOOM_STEP);
+            if (action === 'reset') resetLightboxTransform();
+        });
+    });
+}
+
+if (lightboxModal) {
+    lightboxModal.addEventListener('click', (event) => {
+        if (event.target === lightboxModal) {
+            closeLightbox();
+        }
+    });
 }
 
 document.addEventListener('keydown', event => {
