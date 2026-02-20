@@ -541,9 +541,19 @@ async function loadCategories() {
         allCategories = await response.json();
 
         const select = document.getElementById('prodCategory');
-        // Keep "Seleccione" option
-        select.innerHTML = '<option value="">Seleccione Categoría</option>' +
-            allCategories.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
+        if (select) {
+            // Keep "Seleccione" option
+            select.innerHTML = '<option value="">Seleccione Categoría</option>' +
+                allCategories.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
+        }
+
+        const filterSelect = document.getElementById('productFilterCategory');
+        if (filterSelect) {
+            const currentValue = filterSelect.value;
+            filterSelect.innerHTML = '<option value="">Todas las categorías</option>' +
+                allCategories.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
+            if (currentValue) filterSelect.value = currentValue;
+        }
     } catch (e) {
         console.error('Error loading categories', e);
     }
@@ -599,22 +609,119 @@ async function loadProducts() {
         const response = await fetch(`${API_URL}/products/`);
         const products = await response.json();
 
-        const tbody = document.querySelector('#productsTable tbody');
-        tbody.innerHTML = products.map(p => `
-                    <tr>
-                        <td>${p.id}</td>
-                        <td><span class="badge" style="background: #f1f3f5; color: #495057; font-weight: 600;">${p.code || 'S/N'}</span></td>
-                        <td><img src="${p.image_url}" style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px;" onerror="this.style.display='none'"></td>
-                        <td>${p.name}</td>
-                        <td>${p.price_text}</td>
-                        <td>${p.category}</td>
-                        <td>
-                            <button class="btn-action btn-edit" title="Editar" onclick='editProduct(${JSON.stringify(p).replace(/'/g, "&#39;")})'><i class="fas fa-edit"></i></button>
-                            <button class="btn-action btn-delete" title="Eliminar" onclick="deleteProduct(${p.id})"><i class="fas fa-trash"></i></button>
-                        </td>
-                    </tr>
-                 `).join('');
+        window.allProducts = products;
+        if (document.getElementById('productSearch')) {
+            filterProducts();
+        } else {
+            renderProductsTable(products);
+            updateProductsCounters(products.length, products.length);
+        }
     } catch (e) { console.error(e); }
+}
+
+function renderProductsTable(products) {
+    const tbody = document.querySelector('#productsTable tbody');
+    if (!tbody) return;
+
+    if (!products.length) {
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="7" style="text-align: center; color: #888;">No hay productos con esos filtros.</td>
+            </tr>
+        `;
+        return;
+    }
+
+    tbody.innerHTML = products.map(p => `
+                <tr>
+                    <td>${p.id}</td>
+                    <td><span class="badge" style="background: #f1f3f5; color: #495057; font-weight: 600;">${p.code || 'S/N'}</span></td>
+                    <td><img src="${p.image_url}" style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px;" onerror="this.style.display='none'"></td>
+                    <td>${p.name}</td>
+                    <td>${p.price_text}</td>
+                    <td>${p.category}</td>
+                    <td>
+                        <button class="btn-action btn-edit" title="Editar" onclick='editProduct(${JSON.stringify(p).replace(/'/g, "&#39;")})'><i class="fas fa-edit"></i></button>
+                        <button class="btn-action btn-delete" title="Eliminar" onclick="deleteProduct(${p.id})"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>
+             `).join('');
+}
+
+function updateProductsCounters(filteredCount, totalCount) {
+    const filteredEl = document.getElementById('productsFilteredCount');
+    const totalEl = document.getElementById('productsTotalCount');
+    if (filteredEl) filteredEl.textContent = filteredCount;
+    if (totalEl) totalEl.textContent = totalCount;
+}
+
+function filterProducts() {
+    if (!window.allProducts) return;
+
+    const searchEl = document.getElementById('productSearch');
+    const categoryEl = document.getElementById('productFilterCategory');
+    const minPriceEl = document.getElementById('productPriceMin');
+    const maxPriceEl = document.getElementById('productPriceMax');
+    const sortEl = document.getElementById('productSort');
+
+    const query = (searchEl ? searchEl.value : '').trim().toLowerCase();
+    const category = categoryEl ? categoryEl.value : '';
+    const minPriceRaw = minPriceEl ? minPriceEl.value : '';
+    const maxPriceRaw = maxPriceEl ? maxPriceEl.value : '';
+    const minPrice = minPriceRaw === '' ? NaN : parseFloat(minPriceRaw);
+    const maxPrice = maxPriceRaw === '' ? NaN : parseFloat(maxPriceRaw);
+    const sort = sortEl ? sortEl.value : 'name_asc';
+
+    const filtered = window.allProducts.filter(p => {
+        const name = (p.name || '').toLowerCase();
+        const code = (p.code || '').toLowerCase();
+        const categoryText = (p.category || '').toLowerCase();
+        const brands = (p.brands || '').toLowerCase();
+        const tags = (p.search_tags || '').toLowerCase();
+        const options = (p.options || '').toLowerCase();
+        const priceVal = Number(p.price) || 0;
+
+        const matchesQuery = !query ||
+            name.includes(query) ||
+            code.includes(query) ||
+            categoryText.includes(query) ||
+            brands.includes(query) ||
+            tags.includes(query) ||
+            options.includes(query);
+
+        const matchesCategory = !category || (p.category || '') === category;
+        const matchesMin = isNaN(minPrice) || priceVal >= minPrice;
+        const matchesMax = isNaN(maxPrice) || priceVal <= maxPrice;
+
+        return matchesQuery && matchesCategory && matchesMin && matchesMax;
+    });
+
+    const sorted = [...filtered].sort((a, b) => {
+        if (sort === 'name_asc') return (a.name || '').localeCompare(b.name || '', 'es', { sensitivity: 'base' });
+        if (sort === 'name_desc') return (b.name || '').localeCompare(a.name || '', 'es', { sensitivity: 'base' });
+        if (sort === 'price_asc') return (Number(a.price) || 0) - (Number(b.price) || 0);
+        if (sort === 'price_desc') return (Number(b.price) || 0) - (Number(a.price) || 0);
+        return 0;
+    });
+
+    renderProductsTable(sorted);
+    updateProductsCounters(sorted.length, window.allProducts.length);
+}
+
+function clearProductFilters() {
+    const search = document.getElementById('productSearch');
+    const category = document.getElementById('productFilterCategory');
+    const minPrice = document.getElementById('productPriceMin');
+    const maxPrice = document.getElementById('productPriceMax');
+    const sort = document.getElementById('productSort');
+
+    if (search) search.value = '';
+    if (category) category.value = '';
+    if (minPrice) minPrice.value = '';
+    if (maxPrice) maxPrice.value = '';
+    if (sort) sort.value = 'name_asc';
+
+    filterProducts();
 }
 
 function toggleProductForm() {
