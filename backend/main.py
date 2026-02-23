@@ -77,7 +77,7 @@ app = FastAPI()
 # CORS - Allow Vercel frontend
 origins = [
     "https://almacen-refrielectricos.vercel.app",
-    "https://almacenrefrielectrico.shop"
+    "https://www.almacenrefrielectrico.shop"
 ]
 
 app.add_middleware(
