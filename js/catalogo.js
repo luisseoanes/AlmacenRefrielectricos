@@ -13,7 +13,7 @@ let allProducts = [];
 
 // Helper for secure WhatsApp number
 const getWppNum = () => {
-    const p1 = "57", p2 = "304", p3 = "670", p4 = "2677";
+    const p1 = "57", p2 = "316", p3 = "023", p4 = "4007";
     return p1 + p2 + p3 + p4;
 };
 

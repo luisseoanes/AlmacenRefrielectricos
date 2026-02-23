@@ -36,9 +36,9 @@ document.querySelectorAll('.fade-in').forEach(el => {
 function openSafeWhatsapp() {
     // Number split to avoid simple scrapers
     const p1 = "57";
-    const p2 = "304";
-    const p3 = "670";
-    const p4 = "2677";
+    const p2 = "316";
+    const p3 = "023";
+    const p4 = "4007";
     const msg = "Hola! Vengo desde la página web y necesito información.";
     const url = `https://wa.me/${p1}${p2}${p3}${p4}?text=${encodeURIComponent(msg)}`;
     window.open(url, '_blank');

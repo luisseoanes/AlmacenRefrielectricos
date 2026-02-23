@@ -1,7 +1,9 @@
 # main.py
 
 from typing import List
+import os
 from fastapi import FastAPI, Depends, HTTPException, status
+from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from datetime import timedelta
@@ -267,6 +269,39 @@ async def upload_db(file: UploadFile = File(...), current_user: models.User = De
         return {"filename": file.filename, "message": "Database uploaded successfully to " + destination_path}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Could not upload database: {str(e)}")
+
+@app.get("/admin/download-db")
+async def download_db(current_user: models.User = Depends(auth.get_current_user)):
+    """
+    Endpoint temporal para descargar la base de datos sqlite del volumen de Railway.
+    """
+    try:
+        db_path = database.DB_URL_PATH
+        if not db_path or not os.path.exists(db_path):
+            raise HTTPException(status_code=404, detail="Database file not found")
+        return FileResponse(
+            path=db_path,
+            media_type="application/octet-stream",
+            filename="refrielectricos.db"
+        )
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Could not download database: {str(e)}")
+
+@app.delete("/admin/clear-quotations")
+def clear_quotations(db: Session = Depends(get_db), current_user: models.User = Depends(auth.get_current_user)):
+    """
+    Elimina solamente las cotizaciones/ventas (tabla quotations).
+    No toca productos ni usuarios.
+    """
+    try:
+        deleted = db.query(models.Quotation).delete(synchronize_session=False)
+        db.commit()
+        return {"ok": True, "deleted": deleted}
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"Could not clear quotations: {str(e)}")
 
 @app.put("/quotations/{quotation_id}/items")
 def update_quotation_items(quotation_id: int, items: List[schemas.QuotationItem], db: Session = Depends(get_db), current_user: models.User = Depends(auth.get_current_user)):
