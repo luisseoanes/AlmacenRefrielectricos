@@ -1,6 +1,6 @@
 # main.py
 
-from typing import List
+from typing import List, Optional
 import os
 from fastapi import FastAPI, Depends, HTTPException, status
 from fastapi.responses import FileResponse
@@ -133,9 +133,13 @@ def create_category(category: schemas.CategoryCreate, db: Session = Depends(get_
 
 # Product Endpoints
 @app.get("/products/", response_model=List[schemas.Product])
-def read_products(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    products = db.query(models.Product).offset(skip).limit(limit).all()
-    return products
+def read_products(skip: int = 0, limit: Optional[int] = None, db: Session = Depends(get_db)):
+    query = db.query(models.Product)
+    if skip:
+        query = query.offset(skip)
+    if limit is not None:
+        query = query.limit(limit)
+    return query.all()
 
 @app.post("/products/", response_model=schemas.Product)
 def create_product(product: schemas.ProductCreate, db: Session = Depends(get_db), current_user: models.User = Depends(auth.get_current_user)):
@@ -219,9 +223,13 @@ def get_stats(db: Session = Depends(get_db)):
     )
 
 @app.get("/quotations/", response_model=List[schemas.Quotation])
-def read_quotations(skip: int = 0, limit: int = 100, db: Session = Depends(get_db), current_user: models.User = Depends(auth.get_current_user)):
-    quotations = db.query(models.Quotation).order_by(models.Quotation.created_at.desc()).offset(skip).limit(limit).all()
-    return quotations
+def read_quotations(skip: int = 0, limit: Optional[int] = None, db: Session = Depends(get_db), current_user: models.User = Depends(auth.get_current_user)):
+    query = db.query(models.Quotation).order_by(models.Quotation.created_at.desc())
+    if skip:
+        query = query.offset(skip)
+    if limit is not None:
+        query = query.limit(limit)
+    return query.all()
 
 @app.put("/quotations/{quotation_id}/status")
 def update_quotation_status(quotation_id: int, status: str, db: Session = Depends(get_db), current_user: models.User = Depends(auth.get_current_user)):
